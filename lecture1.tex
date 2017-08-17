@@ -102,13 +102,13 @@
 % Your new macros
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % To be entered
-\setcounter{lecnum}{0}
+\setcounter{lecnum}{1}
 \newcommand{\lecturer}{Prof.\ McDonald}
 \newcommand{\scribe}{Prof.\ McDonald}
-\newcommand{\chtitle}{Scribe template}
-\newcommand{\lecdate}{7 August 2017}
+\newcommand{\chtitle}{Probability review I}
+\newcommand{\lecdate}{22 August 2017}
 
 
 \begin{document}
@@ -122,42 +122,22 @@
 \rule{6.5in}{1pt}
 
 
-\section*{Introduction}
 
-This document provides some information for creating the scribe files
-for STAT--S 682. Before you begin, please read through the macros and
-commands above. You should change all the {\tt to be entered} commands
-as appropriate. Then, simply begin your notes in this document. 
+\section*{Syllabus etc.}
 
-The first thing to note is that there are a number of
-macros which I have already defined. You should use these as much as
-possible. These include macros for $\R$, $\Expect{}$, $\Var{}$, and
-many others. Whenever you find yourself needing these symbols, please
-use the macros.
+\begin{itemize}
+\item Respond to my {\tt Slack} invitation. Examine the board: \url{https://stat-s782fa2017.slack.com/}.
+\item If you don't have a {\tt github} account, set one up:
+  \url{https://education.github.com/pack}.
+\item Consult the course website:
+  \url{https://github.com/stats-782fa2017}.
+\item Start thinking about a paper you want to present (due on
+  Thursday, 24 August) and a group you want for your project.
+\end{itemize}
 
-Second, please place your newly defined macros in the appropriate
-location in the header.
-
-Theorems, definitions, conjectures, corollaries, etc have already been
-created using \AmS-\LaTeX.
-
-All displayed equations should be numbered for further reference. 
-
-A few notes about references: try to use the \verb|\autoref| rather
-that \verb|\ref|. That way you can type \\ \verb|\autoref{thm:whatever}|
-to get \autoref{thm:convergence-1} rather than writing \verb|Theorem \ref{thm:whatever}| 
-to get Theorem \ref{thm:convergence-1}. 
-
-Finally, please use \textsc{Bib}\TeX to create references. Simply add
-new references to the {\tt .bib} file in the repo. Also, I recommend
-using the {\tt natbib} package which gives, for instance,
-\citep{Vapnik1998} or~\citet{Vapnik1998} rather than~\cite{Vapnik1998}
-
-The rest of this document is an example from an old course. Note
-especially~\autoref{alg:kalman}.
 
 \section{Random variables}
-
+\label{sec:random-variables}
 
 A {\em random variable} is a map $X$ from a probability space $\Omega$ to $\R$. We write
 \begin{equation}
@@ -231,39 +211,6 @@ where $p(y|x) = p(x,y)/p(x)$. The {\em Law of Total Expectation} or
 \end{equation}
 
 
-\begin{algorithm}[t!]
-  \caption{Approximate Kalman filter\label{alg:kalman}}
-  \begin{algorithmic}[1]
-  \STATE {\bfseries Input:}
-  % Produce minimum MSE estimates of
-  % $w_i$ $i=1,\ldots,T$ using equation
-  % \eqref{eq:state-space-model2}\\
-  Initial state $w_0$, state variance $\mathbf{P}_0$,
-    and sketching matrices $\Pi\in\R^{n\times m}$ and
-    $\mathbf{R}\in\R^{p\times q}$.
-  \STATE {\bfseries Compress:} $\tilde{\mathbf{H}}\rightarrow\Pi^\top
-  \mathbf{H} \Pi$, $\tilde{\mathbf{G}}\rightarrow \mathbf{R}^\top
-  \mathbf{G}\mathbf{R}$, $\tilde{\X}\rightarrow \Pi\X\mathbf{R}$,
-  $\tilde{\mathbf{A}} = \mathbf{R}^\top \mathbf{A} \mathbf{R}$,
-  $\tilde{\mathbf{P}}_0 = \mathbf{R}^\top \mathbf{P}_0\mathbf{R}$,
-  $z_0=\mathbf{R}w_0$. \\ 
-  \FOR{$i=1$ {\bfseries to} $T$}
-    \STATE Compress the data $\tilde{Y}_i=\Pi Y_i$
-    \STATE Run the standard Kalman filter to produce:
-    $
-    \tilde{z}_{i} \leftarrow
-    \tilde{\mathbf{A}}\tilde{z}_{i-1}+\tilde{\mathbf{K}}_i(\tilde{Y}_i -
-    \tilde{\X}\tilde{\mathbf{A}}\tilde{z}_{i-1}) 
-    $
-    \STATE Update 
-    $\tilde{w}_i \leftarrow \mathbf{R}\tilde{z}_i$ and increment $\mathbf{P}_{i} = 
-    \mathbf{R}\tilde{\mathbf{P}}_{i-1} \mathbf{R}^\top$\;
-  \ENDFOR
-  \STATE Return $w_i$ and $\mathbf{P}_i$, $i=1,\ldots,T$.
-\end{algorithmic}
-\end{algorithm}
-
-
 \section{Important distributions}
 \label{sec:import-distr}
 
@@ -294,6 +241,10 @@ where $p(y|x) = p(x,y)/p(x)$. The {\em Law of Total Expectation} or
 \end{description}
 
 
+
+\section{Convergence}
+\label{sec:convergence}
+
 Much of statistical machine learning is concerned with showing
 asymptotic, or better yet, finite sample properties of computational
 methods. We want to know whether our methods will perform well, and if
@@ -301,8 +252,7 @@ so how well will they perform relative to other methods. For that, we
 need to discuss some useful results from probability theory. First,
 we'll review the convergence of random variables.
 
-\section{Convergence}
-\label{sec:convergence}
+
 
 Let $X_1,X_2,\ldots$ be a sequence of random variables, and let $X$ be
 another random variable with distribution $P$. Let $F_n$ be the cdf of $X_n$ and let $F$ be
@@ -425,7 +375,7 @@ where $Z\sim N(0,1)$.
 \end{theorem}
 
 
-\bibliographystyle{scribebibsty}
-\bibliography{s782references}
+% \bibliographystyle{scribebibsty}
+% \bibliography{s782references}
 
 \end{document}

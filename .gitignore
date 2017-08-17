@@ -10,6 +10,7 @@
 *.fot
 *.cb
 *.cb2
+*.rel
 
 ## Intermediate documents:
 *.dvi
@@ -220,3 +221,7 @@ TSWLatexianTemp*
 *-tags.tex
 .Rproj.user
 *.Rproj
+
+# work ahead
+
+lecture2*
