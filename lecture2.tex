@@ -1,0 +1,387 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+\newcommand{\calP}{\mathcal{P}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% To be entered
+\setcounter{lecnum}{2}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Prof.\ McDonald}
+\newcommand{\chtitle}{Statistics review I}
+\newcommand{\lecdate}{24 August 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+
+\section{Big $O$ little $o$ Notation}
+\label{sec:bigolittleo}
+Deterministic: Let $a_n = a_1,a_2,\ldots$ be a sequence
+\begin{enumerate}
+\item $a_n = o(1)$ means $a_n\rightarrow0$ as $n\rightarrow\infty$
+\item $a_n = o(b_n)$ means $\frac{a_n}{b_n}\rightarrow0$ as $n\rightarrow\infty$. Or equivalently, $\frac{a_n}{b_n} = o(1)$.
+
+  Examples:
+  \begin{itemize}
+  \item If $a_n = \frac{1}{n}$, then $a_n = o(1)$
+  \item   If $b_n = \frac{1}{\sqrt{n}}$, then $a_n = o(b_n)$
+  \end{itemize}
+\item $a_n = O(1)$ means $a_n$ is eventually bounded for all $n$
+  large enough, $|a_n|<c$ for some $c>0$. Note that $a_n =
+    o(1)$ implies $a_n = O(1)$
+\item $a_n = O(b_n)$ means $\frac{a_n}{b_n} = O(1)$. Likewise, $a_n = o(b_n)$ implies $a_n = O(b_n)$.
+
+  Examples:
+  \begin{itemize}
+  \item If $a_n = \frac{n}{2} $, then $a_n = O(n)$
+  \end{itemize}
+\end{enumerate}
+Stochastic analogues:
+\begin{enumerate}
+\item $Y_n = o_p(1)$ if for all $\epsilon > 0$, then $P(|Y_n|>\epsilon)\rightarrow0$
+\item We say $Y_n = o_p(a_n)$ if $\frac{Y_n}{a_n} = o_p(1)$
+\item $Y_n = O_p(1)$ if for all $\epsilon > 0$, there exists a $c > 0$ such that $P(|Y_n|>c)<\epsilon$
+\item We say $Y_n = O_p(a_n)$ if $\frac{Y_n}{a_n} = O_p(1)$
+
+  Examples:
+  \begin{itemize}
+  \item $\bar{X}_n - \mu = o_p(1)$ and $S_n - \sigma^2 =
+    o_p(1)$. By the the Law of Large Numbers.
+  \item  $\sqrt{n}(\bar{X}_n-\mu) = O_p(1)$ and $\bar{X}_n-\mu =
+    O_p(\frac{1}{\sqrt{n}})$. By the Central Limit
+      Theorem.
+  \end{itemize}
+\end{enumerate}
+
+\section{Statistical Inference}
+\label{sec:stat-inference}
+A statistical model $\calP$ is a collection of probability
+distributions or densities. A parametric model has the
+form 
+\begin{equation} 
+  \calP = \{p(x;\theta):\theta\in\Theta\}
+\end{equation}
+where $\Theta\subset\R^d$ in the parametric case.
+
+Examples of nonparametric statistical models:
+\begin{itemize}
+\item $\calP= \{$ all continuous CDF's $\}$
+\item   $\calP = \{f:\int(f''(x))^2dx<\infty\}$
+\end{itemize}
+
+
+\section{Parametric Point Estimation}
+\label{sec:parametric-point-estimation}
+Let $X_1,\ldots,X_n$ be independent and identically distributed
+i.e. {\em iid} random variables with some distribution
+$p(x;\theta)$. We want to estimate $\theta =
+(\theta_1,\dots,\theta_n)$. An {\em estimator} is a function of data
+that does not depend on $\theta$.
+
+
+\begin{example}
+  Suppose $X\sim N(\mu,1)$.
+  \begin{itemize}
+  \item $\mu$ is not an estimator.
+  \item Things that are estimators: $X$, any functions of $X$, 3,
+    $\sqrt{X}$, etc.
+  \end{itemize}
+\end{example}
+
+\section{Ways to Evaluate Estimators}
+\label{sec:estimator-evaluation}
+\begin{enumerate}
+\item Bias and Variance
+\item Mean Squared Error
+\item Minimaxity and Decision Theory
+\item Large Sample Evaluations
+\end{enumerate}
+\begin{definition}{Mean Squared Error (MSE)}. Suppose $\theta, \hat\theta$, define 
+\begin{align}
+\Expect{ \left(\theta - \hat\theta \right)^2 } = \int \cdots \int \left[ \left( \hat\theta(x_1, \ldots, x_n) - \theta\right) f(x_1;\theta)^2 \cdots f(x_n;\theta) \right] dx_1 \cdots dx_n.
+\end{align}
+\end{definition}
+
+\begin{definition}{Bias and Variance}
+The bias is
+\begin{align}
+B = \Expect{\hat\theta} - \theta,
+\end{align}
+and variance is
+\begin{align}
+V = \Var{\hat\theta }.
+\end{align}
+\end{definition}
+
+\begin{result}{Bias-Variance Decomposition}
+\begin{align}
+\mathit{MSE} = B^2 + V
+\end{align}
+\end{result}
+\begin{proof}
+\begin{align*}
+\mathit{MSE} &= \Expect{ ( \hat\theta - \theta )^2}\\
+&= \Expect{ \left(\hat\theta - \Expect{\hat\theta} +
+    \Expect{\hat\theta} - \theta\right)^2 }\\ 
+&= \Expect{ \hat\theta - \Expect{\hat\theta} } + \left(
+  \Expect{\hat\theta} - \theta \right)^2 +  
+\underbrace{2\Expect{ \hat\theta - \Expect{\hat\theta} }}_{=0}
+\left(\Expect{\hat\theta} - \theta \right)\\ 
+&= V + B^2
+\end{align*}
+\end{proof}
+
+An estimator is unbiased if $B=0$. Then $\mathit{MSE} = Variance$.
+
+\begin{example}
+Let $x_1, \ldots, x_n \overset{iid}\sim N(\mu,\sigma^2)$.
+\begin{align*} \Expect{\bar{x}} &= \mu, & \Expect{s^2} &= \sigma^2\\
+  \Expect{(\bar{x} - \mu)^2} &= \frac{\sigma^2}n
+  =O\left(\frac1n\right) &
+\Expect{(s^2 - \sigma^2)^2 } &= \frac{2\sigma^4}{n-1} =
+O\left(\frac1n\right).
+\end{align*}
+\end{example}
+
+\section{Maximum Likelihood}
+\label{sec:max-likelihood}
+\begin{definition}
+  Let $X_1,\ldots,X_n$ have joint density $p(\vec{x};\theta)$ where
+  $\theta\in\Theta$. The {\em likelihood}
+  $\mathcal{L}:\Theta\rightarrow\left[0,\infty\right]$ is defined by
+  \begin{equation}
+    \mathcal{L}(\theta):=\mathcal{L}(\theta;\vec{x})=p(\vec{x};\theta)
+  \end{equation}
+\end{definition}
+
+
+Here $\vec{x}$ is fixed and $\theta$ varies in $\Theta$.
+\begin{enumerate}
+\item The likelihood is a function of $\theta$
+\item The likelihood is not a pdf
+\item If the data are {\em iid}, then $\mathcal{L}(\theta) = \prod_{i=1}^{n}p(x_i,\theta)$
+\item The likelihood is only defined up to some constant of proportionality
+\end{enumerate}
+\begin{definition}
+  Let 
+  \[
+  \hat{\theta}(\vec{x}) = \argmax_{\theta \in
+    \Theta}\mathcal{L}(\theta) = \argmax_{\theta\in\Theta}
+  p(\vec{x};\theta).
+  \]
+  We call $\hat{\theta}(\vec{x})$ the {\em Maximum Likelihood
+    Estimator (MLE)} for $\theta$. Note that this estimator may not be unique or
+  may not exist.
+\end{definition}
+We may apply any monotone increasing function, and still achieve
+maximization. Usually, we solve by taking the log of the likelihood
+function. 
+\begin{equation}
+  \ell(\theta) = \ln \mathcal{L}(\theta)
+\end{equation}
+
+
+\begin{example}
+  Let $X_1,\ldots, X_n \overset{iid}{\sim} \mbox{Bernoulli}(p)$.
+
+  \begin{align*}
+    \mathcal{L} (p) &=
+     \prod_{i=1}^n p^{x_i} (1-p)^{1-x_i} I_{[0,1]}(x_i)\\
+    &= p^{S}(1-p)^{n-S} & \mbox{letting }S = \sum_{i=1}^{n}x_i\\
+    \ell(p) &= S\log{(p)}+ (n-S)\log{(1-p)}\\
+    \frac{\partial}{\partial{p}} &= \frac{S}{p} - \frac{n-S}{1-p}
+    \overset{set}{=} 0\\
+    &\Rightarrow \hat{p} = \frac{S}{n} = \bar{X}_n
+  \end{align*}
+  Note: One should also use second derivative test to
+    ensure critical point is a maximum.
+\end{example}
+
+\begin{example}
+  Let $X_1,\ldots,X_n\sim^{iid} N(0,\theta)$.
+  \begin{align*}
+    \mathcal{L}(\theta) &=
+    \prod_{i=1}^{n}\frac{1}{\sqrt{2\pi\theta}}e^{-x_{i}^{2}/_{2\theta}}\\
+    \ell(\theta)&\propto -\frac{n}{2}\log{(\theta)}-\frac{1}{2\theta}\sum_{i=1}^{n}x_{i}^{2}\\
+    &= -\frac{n}{2\theta}+\frac{1}{2\theta^{2}}\sum_{i=1}^{n}x_{i}^{2}
+    \overset{=}{set} 0\\
+    &\Rightarrow\theta\sum_{i=1}^{n}x_{i}^{2} = n\theta^{2}\\
+    &\Rightarrow\hat{\theta} = 0 \mbox{ or }
+    \frac{1}{n}\sum_{i=1}^{n}x_{i}^{2}.
+  \end{align*}
+\end{example}
+
+The maximum likelihood estimator (MLE) is equivariant. If $\eta =
+g(\theta)$, and we want to estimate $\eta$, we use $\hat{\eta} =
+g(\hat{\theta})$. It is the MLE for $\eta$ (g is 1-to-1, $\eta$ and
+$\theta$ live in same space). 
+
+\section{Bayes Estimator}
+\label{sec:bayes-estimator}
+\begin{definition}
+  Start with prior on $\theta$, $\pi(\theta)$. Compute posterior by
+  using Bayes Theorem. Note $p(\vec{x}|\theta)\pi(\theta) =
+  p(x,\theta)$. Then the {\em posterior distribution} on $\theta$
+  conditional on $\vec{x}$ is
+  \begin{equation}
+    \pi(\theta|\vec{x}) = \frac{p(x|\theta)\pi(\theta)}{m(x)}
+  \end{equation}
+  here $m(x) = \int(p(x|\theta)\pi(\theta))d\theta$.
+\end{definition}
+
+Next, use $\pi(\theta|\vec{x})$ to find an estimator.
+
+One Way: 
+\begin{equation}
+  \hat{\theta} = \Expect{\theta|x} = \int(\theta)(\pi(\theta|x))d\theta
+\end{equation}
+This is often called the {\em Bayes Estimator}. It estimates $\theta$
+by averaging over the posterior.
+
+\begin{example}
+  Let $X_1,\ldots,X_n\sim Bernoulli(p)$ with prior on $p\sim
+  Beta(a,b)$.
+
+  \begin{align*}
+    \pi(p) &=
+    \frac{\Gamma{(a+b)}}{\Gamma{(a)}\Gamma{(b)}}p^{a-1}(1-p)^{b-1}I_{[0,1]}(p)\\
+    \mathcal{L}(p) &= \prod_{i=1}^{n}p^{x_i}(1-p)^{1-x_i} =
+    p^{S}(1-p)^{n-S} &\mbox{where } S = \sum_{i=1}^{n}x_i\\
+    \pi(p|x)&\propto p^{S}(1-p)^{n-S}p^{a-1}(1-p)^{b-1}I_{[0,1]}(p)\\
+    &= p^{S+a-1}(1-p)^{n-S+b-1}I_{[0,1]}(p)\\
+    &\propto \mbox{Beta}(S+a,n-S+b)
+  \end{align*}
+\end{example}
+
+\begin{example}[Maximum a posteriori estimation]
+  Let $X_1,\ldots,X_n\sim^{iid} N(0,1)$. If 
+  \begin{align*}
+    \pi(\mu) &= N(0,\frac{1}{\lambda})\\
+\intertext{then}
+    \pi(\mu|x) &\propto
+    e^{-\frac{1}{2}\sum_{i=1}^{n}(x_i-\mu)^{2}}e^{-\frac{\lambda}{2}\mu^{2}}.
+  \end{align*}
+  We can use the posterior mode as an estimator for $\mu$. 
+  \begin{align*}
+    \tilde{\mu} &=\argmax_\mu
+    e^{-\frac{1}{2}\sum_{i=1}^{n}(x_i-\mu)^{2}}e^{-\frac{\lambda}{2}\mu^{2}}\\
+    &= \argmax_\mu -\frac{1}{2}\sum_{i=1}^{n}(x_i-\mu)^{2}-\frac{\lambda}{2}\mu^{2}\\
+    &=\argmin_\mu \frac{1}{2}\sum_{i=1}^{n}(x_i-\mu)^{2}+\frac{\lambda}{2}\mu^{2}\\
+    &=\argmin_\mu \sum_{i=1}^{n}(x_i-\mu)^{2}+\lambda\mu^{2}\\
+    &= \argmin_\mu \mu^2 - 2\overline{x}\mu + \lambda\mu^2\\
+    &= \frac{\overline{x}}{1+\lambda}
+  \end{align*}
+  This looks similar to Ridge Regression.
+\end{example}
+
+
+
+\end{document}
