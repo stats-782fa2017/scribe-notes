@@ -149,7 +149,7 @@
 \end{example}
 	Suppose $x \in \{0, 1\}^V$ at the solution. If we consider two sets
 	$A = \{i : x_i = 0\}$ and $B = \{i : x_i = 1\}$ then inequalities
-	$b_{ij} \geq x_i - x_j$ is equivalent to $b_{ij} \geq I(i \in A, j \in B)$. Obviously, the optimum $b$ this inequalities are equalities $b_{ij} = I(i \in A, j \in B)$. We can reformulate our problem as find of partition (cut) $V$ into two disjoint sets $A$ and $B$ such that $v_s \in A$, $v_t \in B$ and $\sum\limits_{i \in A, j \in B}c_{ij} \rightarrow \min$; the last term is called \emph{capacity of the cut $(A, B)$}. Any such cut gives an upper bound on the value of max-flow in the network.
+	$b_{ij} \geq x_i - x_j$ is equivalent to $b_{ij} \geq I(i \in A, j \in B)$. Obviously, for the optimum $b$ this inequalities are equalities $b_{ij} = I(i \in A, j \in B)$. We can reformulate our problem as find of partition (cut) $V$ into two disjoint sets $A$ and $B$ such that $v_s \in A$, $v_t \in B$ and $\sum\limits_{i \in A, j \in B}c_{ij} \rightarrow \min$; the last term is called \emph{capacity of the cut $(A, B)$}. Any such cut gives an upper bound on the value of max-flow in the network.
 	
 	Our Dual of Max-Flow was $LP$-relaxation of this problem. Such wise $$\text{value of Max-Flow} \leq \text{optimal of }LP\text{-relaxation} \leq \text{capacity of Min-Cut}\,.$$
 	\begin{theorem}[Max-Flow Min-Cut Theorem] The optimal flow is equal to the capacity of an optimal cut.
