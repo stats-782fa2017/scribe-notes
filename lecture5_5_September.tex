@@ -1,0 +1,279 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\usepackage{braket}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+\newcommand{\Rn}{\R^n}
+\newcommand{\sumi}[2]{\sum\limits_{#1=1}^{#2}}
+\newcommand{\TODO}[1]{\textbf{\color{red} TODO: #1}}
+\newcommand{\trans}[1]{{#1}^\mathsf{T}}
+\newcommand{\Sym}{\mathbb{S}^n}
+\DeclareMathOperator*{\dom}{dom}
+\newcommand{\minl}{\min\limits}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% To be entered
+\setcounter{lecnum}{5}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Inhak Hwang}
+\newcommand{\chtitle}{Optimization basics}
+\newcommand{\lecdate}{5 September 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+
+
+\section{First Order Condition}
+\label{sec:terminology}
+
+\begin{itemize}
+  \item convex problem with differentialbe $`f'$
+  \item a feasible $x$ is optimal iff $\nabla f(x)^{T}( x - y) \ge 0$, $\forall$ feasible $y$
+  \item if unconstrained, the condition reduces to $\nabla f(x)  = 0 $
+\end{itemize}
+
+
+\begin{example}
+  $\minl_x \frac{1}{2}x^{T}Q x + b^{T}x + c $ , $Q \succeq 0$ \\
+      $\qquad$FOC: $\nabla f(x) = Q^{T}x + b = 0$  \\
+	$\qquad$ if $Q \succ 0 $ $\rightarrow$ $x^{*} = -Q^{-1}b$ \\
+	$\qquad$ if $Q$ singular, $b \in Col[Q] \rightarrow$ no solution \\
+     $\qquad$ if $Q$ singular, $b \notin Col[Q] \rightarrow$ $x^{*} = -Q^{*}b + z $ with $z \in null[Q]$
+\end{example}
+
+\begin{example}
+ Projection ont convex $C$ : $\min\limits_{x} \|a-x\|_{2}^{2}$ s.t. $x\in C$\\
+$\qquad$ FOC : $\nabla f(x)^{T}(y-x) = (x - a)^{T}(y - x) \ge 0$, $\forall y\in C$ $\Leftrightarrow$ $a-x \in N_{2}(x)$
+\end{example}
+
+
+\section{Useful Operations}
+\subsection{Partial Optimizations}
+$h(x) = \min\limits_{y}f(x,y) $ is convex if $f$ is convex, and $C$ is convex.
+\begin{example}
+$\min\limits_{x_{1},x_{2}} f(x_{1},x_{2})$  $s.t. g_{1}(x_{1}) \le 0, g_{2}(x_{2}) \le 0$  $\Leftrightarrow$ $ \min\limits_{x_{1}}h(x_{1})$ s.t. $g_{1}(x_{1}) \le 0$
+\end{example}
+
+\subsection{Transformations}
+We can use a monotone increasing transformation $h: \mathbb{R} \rightarrow \mathbb{R}$ to change our problem: \\
+$\quad \min\limits_{x\in C} f(x) \Rightarrow \min\limits_{x\in C} h(f(x)) $ \\
+We can use a change of variable transformation $\phi : \mathbb{R}^{n} \Rightarrow \mathbb{R}^{m}$ :  \\
+$\quad \min\limits_{x \in C} f(x) \Leftrightarrow \min\limits_{\phi(y) \in C} f(\phi(y))$
+
+\begin{example}
+Geometric Program \\
+$\min\limits_{x} f(x) = \sum\limits_{k=1}^{p}\gamma_{k}x_{1}^{a_{k_1}}x_{2}^{a_{k_{2}}} ..x_{n}^{a_{k_{n}}} $ (posynomial) \\
+ $C$ : involved inequalities are in some form and equalities are affine.  \\
+We can change above non-convex problem to the following convex problem by letting $y_{i} = log x_{i}$ : \\
+$\min\limits_{y} \log(\sum\limits_{k=1}^{p}\exp^{a_{ik}^{T}y + b_{ik}}) $ s.t. $\log(\sum_{k=1}^{m} \exp^{a_{ik}^{T}y + b_{ik}}) \le 0$ and $c_{j}^{T}y + d_{j} = 0, j = 1, ... , r $
+\end{example}
+
+\subsection{Eliminate equality constraints}
+$\min\limits_{x}f(x)$ s.t. $g_{i}(x) \le  0, Ax = b$ \\
+$x$ feasible = $My + x_{0}$ s.t. $Ax_{0} = b$ $col[M]= null[A]$ \\
+So we can get an optimization problem with only inequality constraints :  \\
+$\min\limits_{y} f[My+ x_{0}]$ 	s.t. $ g_{i}(My+x_{i}) = 0$
+
+\subsection {Slack Variables}
+Consider: \\
+$\min\limits_{x,s}f(x) $ s.t. $s \ge 0, g_{i}(x) + s_{i} = 0, Ax= b$
+This problem is not convex unless $g_{i}$ is affine. We can relx nonaffine constraints to get : \\
+$\min\limits_{x \in C} f(x) \Rightarrow \min\limits_{x \in \tilde{C} } f(x)$,   $C \subset \tilde{C}$ \\
+In this case optimum of new problem is smaller or equal to the optimum of the original problem.
+
+\section{Standard Problems}
+\subsection{LP (Linear Programs) }
+$\qquad \min_{x} c^{T}x $ with affine inequlaity and affine eqaulity
+
+\begin{example}
+Basis Pursuit \\
+$\qquad \min\limits_{\beta} \| \beta_{0} \|$  s.t. $X \beta = y$  \\
+$\quad$Above problem can be relaxed to : \\
+$\qquad \min\limits_{\beta} \| \beta \|_{1}$ s.t. $X \beta = y$. \\
+$\quad$ This relaxation can be reformulated to a LP problem: \\
+$\qquad \min\limits_{\beta, z} 1^{T}z$ s.t. $z \ge \beta, z \ge -\beta, X\beta = y$
+\end{example}
+
+\begin{example}
+Dantzig selector \\
+$\qquad \min\limits_{\beta} \| \beta \|_{1} $ s.t. $\|x^{T}(y - X\beta)\|_{\infty} \le \lambda$
+\end{example}
+
+\subsection{ QP (Quadratic Programming) }
+\begin{example}
+Lasso, ridge regression, OLS, Portfolio Optimization 
+\end{example}
+
+\subsection {SDP (Semi-Definite Programming)}
+$\qquad \min\limits_{X \in S_{n}} tr(C^{T}X)$ s.t. $tr(A_{i}^{T}X) = b_{i}$, $X \succeq 0$ \\
+$\qquad$ We define $X \bullet A = tr(X^{T}A) $ from now on.
+
+\subsection {Conic Program}
+$\qquad \min\limits_{x}c^{T}x$ \\s.t. $Ax = b$, $D(x) + d \in K$, $K$ a closed convex cone.
+
+The following relationship holds between above programs: \\
+$CP(Conic Programming) \subset QP \subset SOCP \subset SDP \subset CP(Convex Programming)$ 
+
+\section{Lower bound in LP}
+Want to find $B \le \min\limits_{x}f(x)$ 
+
+\begin{example}
+easy example \\
+$\min\limits_{x,y} x+y $ s.t. $x+y \ge 2, x \ge 0, y \ge 0$
+\end{example}
+
+
+\begin{example}
+medium example \\
+$\min\limits_{x,y} x + 3y $ s.t. $x + y \ge 2, x \ge 0, y \ge 0$ \\
+We transform constraints : \\
+know $x + y \ge 2, y \ge 0 \Rightarrow$ $ x + y \ge 2, 2y \ge 0$ $\Rightarrow x + 3y \ge 2$
+\end{example}
+
+\begin{example} general LP \\
+$\min\limits_{x,y} px + qy$ s.t. $ x + y \ge 2, x ,y \ge 0 $ \\
+We transform constraints: \\
+$ax + ay \ge 2a, bx \ge 0, cy \ge 0, a \ge 0, b \ge 0  c \ge 0$ \\
+Add $(a+b)x + (a +c) y \ge 2a $ \\ 
+Let $(a+b) = p, (a+c) =q \Rightarrow b = 2a$ \\
+To answer the question ``What is best lower bound?", Solve: \\
+$\qquad \max\limits_{a,b,c} 2a $\\ s.t. $ a + b = p, a + c =q , a, b, c \ge 0$ \\
+The above LP is "dual" of the original LP : \\
+$\qquad \min\limits_{x,y} px + qy$ s.t. $ x+y \ge 2, x, y, \ge 0$ \\
+We see that number of Dual variables = number of Primal constraints 
+\end{example}
+
+\begin{example} Another general LP example \\
+$\qquad \min\limits_{x,y}(px + qy) $ 	s.t. $x \ge 0, y \le 1, 3x + y = 2$ \\
+$\qquad$We transform constraints: \\
+$\qquad a \ge 0, b \ge 0, -by \ge -b, 3cx + cy = 2c$ \\
+$\qquad$ Now combine: \\
+$\qquad (a + 3c)x + (-b +c )y \ge 2c - b$ \\ 
+$\qquad$ By letting p = (a+3c) and q = (-b + c) We get the following Dual: \\
+$\qquad \max\limits_{a,b,c} 2c - b$ \\
+$\qquad$ s.t. $ a +3c = p, c- b =a , a, b \ge 0$
+\end{example}
+
+For General LP: \\
+$\qquad \min\limits_{x}c^{T}x $ \\
+$\qquad$ s.t. $Ax = b, Gx \le h$ \\
+$ \qquad \Rightarrow$ \\
+$\qquad \max_{u,v} -b^{T}w -b^{T}v $ \\
+$\qquad$ s.t. $-A^{T}u - h^{T}v = c, v\ge 0$
+
+
+
+%\bibliographystyle{scribebibsty}
+%\bibliography{s782references}
+
+\end{document}
+ 
