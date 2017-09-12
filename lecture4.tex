@@ -1,0 +1,186 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\usepackage{braket}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+\newcommand{\Rn}{\R^n}
+\newcommand{\sumi}[2]{\sum\limits_{#1=1}^{#2}}
+\newcommand{\TODO}[1]{\textbf{\color{red} TODO: #1}}
+\newcommand{\trans}[1]{{#1}^\mathsf{T}}
+\newcommand{\Sym}{\mathbb{S}^n}
+\DeclareMathOperator*{\dom}{dom}
+\newcommand{\minl}{\min\limits}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% To be entered
+\setcounter{lecnum}{4}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Dmitrii Avdiukhin}
+\newcommand{\chtitle}{Optimization basics}
+\newcommand{\lecdate}{30 August 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+
+
+\section{Terminology}
+\label{sec:terminology}
+
+\begin{definition}
+  A convex optimization problem (program)
+  \[\left\{
+    \begin{array}{ll}
+    \minl_{x \in D} f(x) & \\
+    \text{subject to} & g_i(x) \leq 0\ \ \forall i \in [1:m] \\
+                    & A x = b 
+    \end{array}
+    \right.,
+  \]
+  where $f, g_i$ are convex and $S = \dom f \cap \dom g_i$.
+\end{definition}
+In this definition:
+\begin{itemize}
+  \item $f$ -- criteria or objective function.
+  \item $g_i$ -- inequality constraints.
+  \item $x$ is a \emph{feasible point} if it satisfies the conditions,
+    namely $x \in D$, $g_i(x) \leq 0$, and $A x = b$.
+  \item $\min f$ over feasible points points -- \emph{optimal value} $f^*$.
+  \item If $x$ is feasible and $f(x) = f^*$ then $x$ is an \emph{optimum} (solution, minimizer).
+  \item Feasible $x$ is a \emph{local optimum} if $\exists R > 0$ such that $\forall y \in V_R(x)\ \ f(x) \leq f(y)$.
+  \item If $x$ is feasible and $f(x) \leq f^* + \varepsilon$ then $x$ is \emph{$\varepsilon$-suboptimal}.
+  \item If $x$ is feasible and $g_k(x) = 0$ then $g_k$ is \emph{active} at $x$ (otherwise inactive).
+\end{itemize}
+Properties:
+\begin{itemize}
+  \item Solution set $X_{opt}$ is convex.
+  \item If $f$ is strictly convex then the solution is unique.
+  \item For convex optimization problems all local optima are global.
+  \item The set of feasible points is convex.
+\end{itemize}
+\begin{example}
+  Lasso. $\minl_\beta \norm{y - X \beta}_2^2$ subject to $\norm \beta_1 \leq s$.
+  \begin{itemize}
+    \item $g_1(\beta) = \norm \beta_1 - s$ -- convex, no equality constraints.
+    \item $X$ is $p \times n$ matrix
+      \begin{itemize}
+        \item If $n \geq p$ and $X$ is full rank
+            then $\nabla^2 f(\cdot) = 2 \trans X X$ is positive definite matrix.
+          The function is strictly convex, therefore the solution is unique.
+        \item If $p > n$ then $\exists \beta \neq 0$ such that $X \beta = 0$ $\implies$ multiple solutions.
+      \end{itemize}
+  \end{itemize}
+\end{example}
+%\bibliographystyle{scribebibsty}
+%\bibliography{s782references}
+
+\end{document}
+ 

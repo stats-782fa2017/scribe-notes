@@ -1,0 +1,259 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\usepackage{braket}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+\newcommand{\Rn}{\R^n}
+\newcommand{\sumi}[2]{\sum\limits_{#1=1}^{#2}}
+\newcommand{\TODO}[1]{\textbf{\color{red} TODO: #1}}
+\newcommand{\trans}[1]{{#1}^\mathsf{T}}
+\newcommand{\Sym}{\mathbb{S}^n}
+\DeclareMathOperator*{\dom}{dom}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% To be entered
+\setcounter{lecnum}{3}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Dmitrii Avdiukhin}
+\newcommand{\chtitle}{Convex sets and functions}
+\newcommand{\lecdate}{30 August 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+
+
+\section{Convex functions}
+\label{sec:convex-functions}
+
+\begin{definition}
+  Set $C$ is \emph{convex} iff \ \ $\forall x,c \in C, \forall t \in [0; 1]\ \ t x + (1-t) y \in C.$
+\end{definition}
+So $C$ is convex iff for any two points in $C$ their segment is also entirely in $C$.
+%\TODO{picture}
+\begin{definition}
+  \emph{Convex combination} of set of points $x_1, \ldots, x_k \in \Rn$ is
+  \[\Set{\sumi ik \Theta_i x_i | \sumi ik \Theta_i=1,\ \forall i\ \Theta_i \in [0; 1]}.\]
+\end{definition}
+
+\begin{definition}
+  \emph{Convex hull} of any $C \in \Rn$, denoted $conv(C)$ is a union of all convex combinations of different elements of $C$.
+\end{definition}
+
+Examples:
+\begin{itemize}
+  \item Empty set, point, line, segment.
+  \item Norm ball: $\Set{x | \norm x < r}$.
+  \item Hyperplane $\Set{x | \trans{a} x = b}$, Affine space $\Set{x | A x = b}$.
+  \item Hyperspace: $\Set{x | \trans{a} x \leq b}$, Polyhedron $\Set{x | A x \leq b}$.
+  \item Cone such that if $x_1, x_2 \in C$ then $t_1 x_1 + t_2 x_2 \in C \ \forall t_1, t_2 \geq 0$.
+\end{itemize}
+\begin{definition}
+  Set $C$ is a \emph{cone} iff \ \ $\forall t \geq 0,\ x \in C \implies t x \in C$.
+\end{definition}
+Type of cones:
+\begin{itemize}
+  \item Norm cone: $\Set{(x,t) | \norm x \leq t}$.
+  \item Normal cone for some $C$ and $x \in C$: $N_C(x) = \Set{g | \trans g x \geq \trans g y \ \forall y \in C}$.
+  \item Positive semidefinite cone $S_+^n = \Set{x \in S^n | x \succeq 0}$, $S^n$ is Hilbert space.
+\end{itemize}
+
+\section{Key properties}
+%\TODO{pictures}
+\begin{itemize}
+  \item Separation hyperplane. $A, B$ are convex, nonempty, disjoint. Then
+    $\exists a,b:\ A \subseteq \Set{x | \trans a \leq b}, B \subseteq \Set{x | \trans a \geq b}$.
+  \item Supporting hyperplane. $C$ nonempty, convex, $x_0 \in boundary(C)$. Then
+    $\exists a:\ C \subseteq \Set{x | \trans a x \leq \trans a x_0}$.
+\end{itemize}
+
+
+\section{Operations preserving convexity}
+\begin{itemize}
+  \item Intersection.
+  \item Scaling, translation. $C$ is convex $\implies a C + b$ is convex.
+  \item Affine image and preimage. $f(x) = A x + b$, $C$ is convex $\implies f(C), f^{-1}(C)$ are convex.
+  \item Lots more (See \cite{boyd2004convex}, chapter $2$).
+\end{itemize}
+
+\begin{example}
+  $A_1, \ldots, A_k, B \in \Sym$ -- symmetrical matrices.
+  Then $C = \Set{x \in \R^k | \sumi ik x_i A_i \preceq B}$.
+\end{example}
+\begin{proof}
+  $f: \R^k \to \Sym$, $f(x) = B - \sumi i k x_i A_i$.
+  $C = f^{-1}(S_+^n)$ -- affine preimage of convex cone.
+\end{proof}
+
+\section{Convex function}
+
+\begin{definition}
+  Function $f: \Rn \to \R$ is \emph{convex} iff $\dom f \subseteq \Rn$ is convex and
+    \[\forall x,y \in \dom f, t \in [0;1] \ \ \ f(t x + (1-t) y) \leq t f(x) + (1-t) f(y)\]
+\end{definition}
+
+Other definitions:
+\begin{itemize}
+  \item $f$ is \emph{concave} iff $-f$ is convex.
+  \item $f$ is \emph{strictly convex} iff $\forall t \in (0; 1)$ the inequality in definition is strict.
+  \item $f$ is \emph{strongly convex} with parameter $\tau$
+    iff $f(x) - \frac \tau 2 \norm x_2^2$ is convex.
+\end{itemize}
+
+Examples:
+\begin{itemize}
+  \item $f(x) = \frac 1 x$ is strictly convex, but not strongly.
+  \item Univariate functions:
+    \begin{itemize}
+      \item $e^{ax}$ is convex $\forall a \in \R$ over $\R$.
+      \item $x^a$ convex given $a \geq 1$ or $a \leq 1$ over $\R_+$.
+      \item $\log x$ is concave over $\R_+$.
+    \end{itemize}
+  \item Affine $\trans a x b$ is both convex and concave.
+  \item Quadratic $\frac 1 2 \trans x Q x + \trans b x + c$ is convex if $Q \succeq 0$.
+  \item \ \ \ \ $\norm {u - A x}_2^2$ convex since $\trans A A \succeq 0$.
+  \item Norms: all vector norms and most matrix norms are convex.
+  \item Indicator function is convex. $C$ is a convex set, then
+    $I_C(x) = \begin{cases}
+                0,\ x \in C \\
+                \infty, otherwise
+              \end{cases}$.
+  \item Support function is convex $\forall C$. $I_C^*(x) = \max\limits_{y \in C} \trans x y$.
+\end{itemize}
+
+\section{Key properties}
+\begin{itemize}
+  \item $f$ is convex iff its epigraph is convex, where
+    $epi(f) = \set{ (x,t) \in \dom f \times R | f(x) \leq t}$.
+  \item $f$ is convex $\implies$ all its sublevel sets are convex. $C_t = \set{x \in \dom f | f(x) \leq t}$.
+    The converse is false.
+  \item Assume $f$ is differentiable. Then $f$ is convex iff $\dom f$ is convex and
+    $\forall x,y \in \dom f\ \ f(y) \geq f(x) + \nabla \trans{f(x)} (y-x)$.
+    Essentially, it means that $f$'s graph is above any tangent plain.
+  \item Assume $f$ is twice differentiable.
+    $f$ is convex iff $\dom f$ is convex and $\forall x \in \dom f\ \ \nabla^2 f(x) \succeq 0$.
+\end{itemize}
+
+\section{Operations preserving function convexity}
+
+\begin{itemize}
+  \item Nonnegative linear combination.
+  \item Pointwise maximum.
+    $\forall s \in S\ \ f_s$ is convex $\implies f(x) = \max\limits_S f_s(x)$ is also convex.
+  \item Partial minimum. $g(x,y)$ convex over variables $x, y$; $C$ convex.
+    Then $f(x) = \min\limits_{y \in C} g(x,y)$ is also convex.
+    E.g., $f(x) = \max\limits_{y \in C} \norm{x-y}$ or $f(x) = \min\limits_{y \in C} \norm{x-y}$.
+\end{itemize}
+
+\bibliographystyle{scribebibsty}
+\bibliography{s782references}
+
+\end{document}

@@ -1,0 +1,238 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\usepackage{braket}
+\usepackage{mathtools}
+\usepackage{todonotes}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+\newcommand{\eqdef}{=\vcentcolon}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+
+
+% To be entered
+\setcounter{lecnum}{6}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Nikolai Karpov}
+\newcommand{\chtitle}{Duality}
+\newcommand{\lecdate}{7 August 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+\begin{example}[Max-Flow and Min-Cut]
+	For a graph $G = (V, E)$ with an edge limit function $c : E \rightarrow \R_{\geq 0}$ (sometimes this pair is called network) and vertices $v_s, v_t$; source and sink
+	accordingly. The Max-Flow is the following problem.
+	\[\left\{
+	\begin{array}{lll}
+	& \max\limits_{x \in \R^E} {\sum\limits_{j \in V}f_{sj}} \\
+	\text{s.t.} &  0 \leq f_{ij} \leq c_{ij} & \forall (i, j) \in E \\
+	& \sum\limits_{(i, k) \in E} f_{ik} = \sum\limits_{(k, i) \in E} f_{ki} & \forall k \in V \setminus \{v_s, v_t\}
+	\end{array}
+	\right.
+	\]
+	Dual version of this problem:
+	\[
+	\left\{
+	\begin{array}{lll}
+	&\min\limits_{(b, x) \in \R^E\times \R^V}\sum\limits_{(i, j) \in E}b_{ij}c_{ij} \\
+	\text{s.t.} & b_{ij}+x_j-x_i \geq 0 & \forall (i, j) \in E \\
+	& b \geq 0, x_s = 1, x_t = 0
+	\end{array}
+	\right.
+	\]
+\end{example}
+	Suppose $x \in \{0, 1\}^V$ at the solution. If we consider two sets
+	$A = \{i : x_i = 0\}$ and $B = \{i : x_i = 1\}$ then inequalities
+	$b_{ij} \geq x_i - x_j$ is equivalent to $b_{ij} \geq I(i \in A, j \in B)$. Obviously, for the optimum $b$ this inequalities are equalities $b_{ij} = I(i \in A, j \in B)$. We can reformulate our problem as find of partition (cut) $V$ into two disjoint sets $A$ and $B$ such that $v_s \in A$, $v_t \in B$ and $\sum\limits_{i \in A, j \in B}c_{ij} \rightarrow \min$; the last term is called \emph{capacity of the cut $(A, B)$}. Any such cut gives an upper bound on the value of max-flow in the network.
+	
+	Our Dual of Max-Flow was $LP$-relaxation of this problem. Such wise $$\text{value of Max-Flow} \leq \text{optimal of }LP\text{-relaxation} \leq \text{capacity of Min-Cut}\,.$$
+	\begin{theorem}[Max-Flow Min-Cut Theorem] The optimal flow is equal to the capacity of an optimal cut.
+	\end{theorem}
+	In this case Primal and Dual gas the same optimal values. It's truth in general case for linear programs (see Farkas' lemma in~\cite{boyd2004convex}); this property is called ``strong duality''.
+
+\section{Lagrangian}
+\subsection{Linear programs}
+Return to $LP$ (alternate derivation)
+\[
+\left\{
+\begin{array}{lll}
+&\min\limits_xc^Tx\\
+\text{s.t.} & Ax = b \\
+& Gx \geq h
+\end{array}
+\right.
+\]
+
+For any $u$ and $v \geq 0$ if $x$ is feasible:
+\[c^Tx \geq c^Tx+u^T\left(Ax-b\right)+v^T\left(Gx-h\right) \eqdef L(x, u, v)\,.\]
+If $C$ is a feasible set, $f^*$ is optimal value:
+\[f^* \geq \min\limits_{x \in C}L(x, u, v)\geq\min\limits_{x}L(x, u, v)\eqdef g(u, v)\,.\]
+
+\[
+g(u, v) = \left\{
+	\begin{array}{ll}
+	-b^Tu-h^Tv &\text{, if } c = -A^Tu-G^Tv \\
+	-\infty &\text{, otherwise}
+	\end{array}
+\right.
+\]
+
+Maximize $g$ over $u$, $v \geq 0$ provide lower bound.
+We call $L(x, u, v)$ the Lagrangian, $g(u, v)$ the Lagrange dual function.
+
+\subsection{General Case}
+
+\[
+\left\{
+\begin{array}{lll}
+&\min{f(x)} \\
+\text{s.t.} & h_i(x) \leq 0 & i \in [m] \\
+& l_j(x) = 0 & i \in [r]
+\end{array}
+\right.
+\]
+\[L(x, u, v) = f(x) + \sum\limits_{i=1}^mu_ih_i(x)+\sum\limits_{j=1}^rv_jl_j(x)~\left(u \geq 0\right)\] 
+
+\[f^* \geq \min_{x}{L(x, u, v)} \eqdef g(u, v)\]
+
+$g$ is concave.
+
+\begin{example}
+	\[
+	\left\{
+	\begin{array}{lll}
+	&\min\limits_{x}\frac{1}{2}x^TQx+c^Tx \\
+	\text{s.t.} & Ax=b \\
+	& x \geq 0
+	\end{array}
+	\right.
+	\]
+	\[L(x, u, v) = \frac{1}{2}x^TQx+c^Tx-u^Tx+v^T(Ax-b)\]
+	\[x^* = -Q^{-1}(c-u^TA^Tv)\]
+	\[L(x^*,u,v) = -\frac{1}{2}(c-u+A^Tv)Q^{-1}(c-u+A^Tv)-b^Tv\]
+	what if $Q \succeq 0\,?$
+	\begin{itemize}
+		\item \textbf{Case 1:} $c -u + A^Tv \in col(Q)$
+		\[x = -Q^T(c-u+A^Tv) \implies P(c-u+A^Tv)=0\] where P is projection onto $nul(Q)\,.$
+		\item \textbf{Case 2:} $c-u+A^Tv \not\in col(Q) \implies c-u+A^Tv = z_1 + z_2$ where $z_1 \in col(Q), z_2 \in nul(Q)$ and $z_2 \not= 0\,.$ 
+	\end{itemize}
+	\[
+	g(u, v) = \left\{
+	\begin{array}{ll}	
+	-\frac{1}{2}(c-u+A^Tv)Q^{-1}(c-u+A^Tv)-b^Tv & \text{, Case 1} \\
+	-\infty& \text{, Case 2}
+	\end{array}
+	\right.
+	\]
+\end{example}
+
+\bibliographystyle{scribebibsty}
+\bibliography{s782references}
+
+\end{document}
