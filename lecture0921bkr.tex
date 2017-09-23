@@ -106,7 +106,7 @@
 
 
 % To be entered
-\setcounter{lecnum}{8}
+\setcounter{lecnum}{9}
 \newcommand{\lecturer}{Prof.\ McDonald}
 \newcommand{\scribe}{Ben Rosenzweig}
 \newcommand{\chtitle}{Specialized techniques}
@@ -124,9 +124,10 @@
 \rule{6.5in}{1pt}
 
 \section{Dual (sub)gradient methods}
-\[\min_xf(x) \st Ax=b\]
-Then the dual problem is \[\max_u -f^*(-A^Tu)-b^Tu.\]
-Let $g(u):=f^*(-A^Tu)-b^Tu$. Our goal is to minimize $g(u)$.
+Primal problem:
+\[\min_xf(x) \st Ax=b.\]
+Dual is \[\max_u -f^*(-A^Tu)-b^Tu,\]
+where $f^*$ is the conjugate of $f$.  Let $g(u):=f^*(-A^Tu)-b^Tu$. Our goal is to minimize $g(u)$.
 The subdifferertial is given by
 \[
 \partial g(u)= A\partial f^*(-A^Tu)-b^Tu, 
@@ -134,9 +135,9 @@ The subdifferertial is given by
 but if $x\in\argmin_z L(z,u)$ then $\partial g(u)={Ax-b}$.  We may solve this as follows:
 
 \begin{algorithmic}
-\STATE  guess $u^{(0)}$
+\STATE  guess initial $u^{(0)}$
 \FOR {$k=1$ {\bfseries to} ...}
-\STATE $x^{(k)}\in\argmin_xf(x)+(u^{(k-1)})^TAx$
+\STATE choose $x^{(k)}\in\argmin_xf(x)+(u^{(k-1)})^TAx$
 \STATE $u^{(k)} = k^{(k-1)}+t_k\left(Ax^{(k-1)}-b\right)$
 \ENDFOR
 \end{algorithmic}
