@@ -1,0 +1,260 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+% Ben's macros:
+\renewcommand{\O}{\ensuremath{\mathcal{O}}}
+\newcommand{\st}{\ensuremath{\;\mathrm{s.}\;\mathrm{t.}\;}}
+\newcommand{\wrt}{\ensuremath{\;\mathrm{w.}\;\mathrm{r.}\;\mathrm{t.}\;}}
+\newcommand{\then}{\ensuremath{\;\Rightarrow\;}}
+
+
+% To be entered
+\setcounter{lecnum}{9}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Ben Rosenzweig}
+\newcommand{\chtitle}{Specialized techniques}
+\newcommand{\lecdate}{21 September 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+\section{Dual (sub)gradient methods}
+Primal problem:
+\[\min_xf(x) \st Ax=b.\]
+Dual is \[\max_u -f^*(-A^Tu)-b^Tu,\]
+where $f^*$ is the conjugate of $f$.  Let $g(u):=f^*(-A^Tu)-b^Tu$. Our goal is to minimize $g(u)$.
+The subdifferertial is given by
+\[
+\partial g(u)= A\partial f^*(-A^Tu)-b^Tu, 
+\]
+but if $x\in\argmin_z L(z,u)$ then $\partial g(u)={Ax-b}$.  We may solve this as follows:
+
+\begin{algorithmic}
+\STATE  guess initial $u^{(0)}$
+\FOR {$k=1$ {\bfseries to} ...}
+\STATE choose $x^{(k)}\in\argmin_xf(x)+(u^{(k-1)})^TAx$
+\STATE $u^{(k)} = k^{(k-1)}+t_k\left(Ax^{(k-1)}-b\right)$
+\ENDFOR
+\end{algorithmic}
+
+Formally: if $f$ is strictly convex then
+\begin{enumerate}
+\item conjugate $f^*$ is differentiable
+\item procedure is dual gradient ascent
+\item $x^{(k)}$ is the unique minimizer
+\end{enumerate}
+We can choose $t_k$ as before and apply proximal methods (or acceleration).
+
+\section{Decomposable Dual}
+\begin{example}
+  \[ \min_x \sum_{i=1}^P f_i(x_i) \st Ax=b \]
+  standard minimization decomposes into $x^+\in\argmin_x\sum_{i=1}^P f_i(x_i) + u^TAx$, which is equivalent to solving separately for each $x_i$:
+  \[ x^+_i\in\argmin_{x_i}f_i(x_i)+u^TA_ix_i. \]
+So we can iterate:
+\begin{align*}
+x_i^{(k)}&\in\argmin_{x_i}f(x_i)+(u^{(k-1)})^TA_ix_i\\ 
+u^{(k)} &= k^{(k-1)}+t_k\left(\sum_{i=1}^P A_ix_i^{(k)}-b \right)\\
+\end{align*}
+Strong duality holds in this particular example since we have no inequality constraints.
+If the constraints are inequalities, i.e. $Ax\leq b$, we make a slight modification to $u^{(k)}$:
+\[
+u^{(k)} = \left(k^{(k-1)}+t_k\left(\sum_{i=1}^B A_ix_i^{(k)}-b \right)\right)_+
+\]
+\end{example}
+
+\section{Augmented Lagrangian}
+We need some constraints on $f$ for dual ascent to work ($\to g^*$), which the Augmented Lagrangian provides.  Some simple sufficient conditions are:
+\begin{enumerate}
+\item $f$ is strongly convex \then for accuracy $\epsilon$ we require $\O(1/\epsilon)$ iterations
+\item $f$ is strongly convex and $\nabla f$ Lipschitz $\then\O(log(1/\epsilon))$ iterations
+  \end{enumerate}
+    Note: To achieve strong duality (primal optimality) the program must also satisfy one of the conditions mentioned earlier (e.g. Slater's condition).
+
+    Transform $\min_xf(x)+\frac{\rho}{2}||Ax-b||_2^2 \st Ax=b$.  The objective is strongly convex if $A$ has full column rank.  Dual gradient ascent then becomes
+    \begin{align*}
+      x^{(k)}&=\argmin_xf(x)+(u^{(k-1)})^TAx+\frac{\rho}{2}||Ax-b||_2^2\\ % second term forces us toward feasible x
+    u^{(k)} &= k^{(k-1)}+\rho(Ax^{(k-1)}-b)
+    \end{align*}
+    Replacing the step size $t_k$ with $\rho$ gives better convergence properties than the original DGA.  But by introducing the norm we lose the decomposability property (if we had it) and  attendant opportunity for parallelization.
+$\rho$ balances primal feasibility with a small objective; a larger $\rho$ places less weight on objective value and forces $x^{(k)}$ closer to primal feasible points.
+    
+\section{Alternating Direction Method of Multipliers (ADMM)}
+Fixes the augmented Lagrangian
+\[\min_{x,z}f(x)+g(x) \st Ax+Bz=c\]
+Add $\frac{\rho}{2}||Ax+Bz-c||_2^2$ to the objective, penalizing unfeasibility:
+\[
+L_\rho(x,z,u)=f(x)+g(z)+u^T(Ax+Bz-c) + \frac{\rho}{2}||Ax+Bz-c||_2^2
+\]
+
+Iteratively update estimates of $x^*,z^*,u^*$:
+\begin{align*}
+  x^{(k)}&=\argmin_xL_\rho(x,z^{(k-1)},u^{(k-1)})\\
+z^{(k)}&=\argmin_zL_\rho(x^{(k-1)},z,u^{(k-1)})\\
+u^{(k)} &= k^{(k-1)}+\rho(Ax^{(k-1)}+Bx^{(k-1)}-b)\\
+\end{align*}
+
+Properties of ADMM (some of which do not require $A$ and $B$ to be full rank):
+\begin{enumerate}
+  \item $Ax^{(k)}+Bz^{(k)}-c\to 0$ as $k\to\infty$ (primal feasibility)
+\item $f^{(k)}+g^{(k)}\to f^*+g^*$ (primal optimality)
+\item $u^{(k)}\to u^*$ (dual solution)
+\item doesn't necessarily give $x^{(k)}\to x^*$ and $z^{(k)}\to z^*$
+\end{enumerate}
+
+The exact convergence rate is unknown, but empirically seems close to $\O(1/\epsilon)$.
+
+\begin{example}[LASSO]
+\[  \min_\beta \frac{1}{2}||y+X\beta||_2^2+\lambda||\alpha|| \st \alpha=\beta \]
+ADMM update:
+\begin{align*} % looks like ridge regression
+  \beta^{(k)}&=(X^TX+\rho I)^{-1}(X^Ty+\rho(\alpha^{(k-1)}-w^{(k-1)}))\\ 
+  \alpha^{(k)}&=S_{\lambda/\rho}(\beta^{(k)}+w^{(k-1)})\\
+  w^{(k)}&=w^{(k-1)}+\beta^{(k)}-\alpha^{(k)}\\
+\end{align*}
+\end{example}
+Issues with ADMM:
+\begin{itemize}
+\item How to choose $\rho$.
+\item Different ADMM formulations of the problem may have different convergence properties.
+  \end{itemize}
+
+\section{Consensus ADMM}
+\[ \min_x\sum_{i=1}^Pf_i(a_i^Tx+b_i)+g(x) \]
+Introduce blocks of RVs $x_1,...,x_P$ and minimize: \[\min_{x1,...,xP,x}\sum_{i=1}^Pf_i(a_i^Tx+b_i)+g(x)\st x_i=x\forall i\]
+Consensus ADMM update:
+\begin{align*}
+  x_i^{(k)}&=\argmin_{x_i}f_i(a_i^Tx_i+b_i)+\frac{\rho}{2}||x_i-x^{(k-1)}+w_i^{(k-1)}||_2^2\\
+x^{(k)}=\argmin_{x}\frac{\rho}{2}||x-\overline{x}^{(k)}+w_i^{(k-1)}||_2^2 + g(x)\\
+w_i^{(k)}=w_i^{(k-1)}+x_i^{(k)}-x^{(k)}\\
+\end{align*}
+
+\section{Coordinate Descent}
+Works well with LASSO.%stats opers
+If $f(x)=g(x)+\sum_{i=1}^nh_i(x_i)$ where $g$ is convex and differentiable, h merely convex
+\then we can:
+Guess $x^{(0)}$.  Update according to:
+\begin{align*}
+x_1^{(k)}&\in \argmin_{x_1} f(x_1,x_2^{(k-1)},...,x_n^{(k-1)})\\
+x_2^{(k)}&\in \argmin_{x_2} f(x_1^{(k)},x_2,...,x_n^{(k-1)}) (minimize over whole vector or block)\\
+...&
+\end{align*}
+
+
+\begin{example}[LASSO]
+  (state of the art in LASSO software.)
+  \begin{align*}
+    ||beta||&=\sum_{i=1}^P|\beta_i|\\
+    \beta_i&=S_{\lambda/||x_i||_2^2}(\frac{X_i^T(y-X_{-i}\beta_{-i})}{X_i^TX_i})\\
+    \end{align*}
+  and just take the derivative of the objective \wrt $\beta_i$
+\end{example}
+
+\bibliographystyle{scribebibsty}
+\bibliography{s782references}
+
+\end{document}
