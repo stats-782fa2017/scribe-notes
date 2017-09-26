@@ -212,7 +212,7 @@ The exact convergence rate is unknown, but empirically seems close to $\O(1/\eps
 \[  \min_\beta \frac{1}{2}||y+X\beta||_2^2+\lambda||\alpha|| \st \alpha=\beta \]
 ADMM update:
 \begin{align*} % looks like ridge regression
-  \beta^{(k)}&=(X^TX+\rho I)^{-1}(X^Ty+\rho(\alpha^{(k-1)}-w^{(k-1)}))\\ 
+  \beta^{(k)}&=\left(X^TX+\rho I\right)^{-1}\left(X^Ty+\rho(\alpha^{(k-1)}-w^{(k-1)})\right)\\ 
   \alpha^{(k)}&=S_{\lambda/\rho}(\beta^{(k)}+w^{(k-1)})\\
   w^{(k)}&=w^{(k-1)}+\beta^{(k)}-\alpha^{(k)}\\
 \end{align*}
@@ -225,12 +225,12 @@ Issues with ADMM:
 
 \section{Consensus ADMM}
 \[ \min_x\sum_{i=1}^Pf_i(a_i^Tx+b_i)+g(x) \]
-Introduce blocks of RVs $x_1,...,x_P$ and minimize: \[\min_{x1,...,xP,x}\sum_{i=1}^Pf_i(a_i^Tx+b_i)+g(x)\st x_i=x\forall i\]
+Introduce blocks of RVs $x_1,...,x_P$ and minimize: \[\min_{x1,...,x_P,x}\sum_{i=1}^Pf_i(a_i^Tx+b_i)+g(x)\st x_i=x\,\forall i\]
 Consensus ADMM update:
 \begin{align*}
   x_i^{(k)}&=\argmin_{x_i}f_i(a_i^Tx_i+b_i)+\frac{\rho}{2}||x_i-x^{(k-1)}+w_i^{(k-1)}||_2^2\\
-x^{(k)}=\argmin_{x}\frac{\rho}{2}||x-\overline{x}^{(k)}+w_i^{(k-1)}||_2^2 + g(x)\\
-w_i^{(k)}=w_i^{(k-1)}+x_i^{(k)}-x^{(k)}\\
+x^{(k)}&=\argmin_{x}\frac{\rho}{2}||x-\overline{x}^{(k)}+w_i^{(k-1)}||_2^2 + g(x)\\
+w_i^{(k)}&=w_i^{(k-1)}+x_i^{(k)}-x^{(k)}\\
 \end{align*}
 
 \section{Coordinate Descent}
@@ -240,7 +240,7 @@ If $f(x)=g(x)+\sum_{i=1}^nh_i(x_i)$ where $g$ is convex and differentiable, h me
 Guess $x^{(0)}$.  Update according to:
 \begin{align*}
 x_1^{(k)}&\in \argmin_{x_1} f(x_1,x_2^{(k-1)},...,x_n^{(k-1)})\\
-x_2^{(k)}&\in \argmin_{x_2} f(x_1^{(k)},x_2,...,x_n^{(k-1)}) \text{(minimize over whole vector or block)}\\
+x_2^{(k)}&\in \argmin_{x_2} f(x_1^{(k)},x_2,...,x_n^{(k-1)})\; \text{ (minimize over whole vector or block)}\\
 ...&
 \end{align*}
 
@@ -249,9 +249,9 @@ x_2^{(k)}&\in \argmin_{x_2} f(x_1^{(k)},x_2,...,x_n^{(k-1)}) \text{(minimize ove
   (state of the art in LASSO software.)
   \begin{align*}
     ||\beta||&=\sum_{i=1}^P|\beta_i|\\
-    \beta_i&=S_{\lambda/||x_i||_2^2}(\frac{X_i^T(y-X_{-i}\beta_{-i})}{X_i^TX_i})\\
+    \beta_i&=S_{\lambda/||x_i||_2^2}\left(\frac{X_i^T(y-X_{-i}\beta_{-i})}{X_i^TX_i}\right)\\
     \end{align*}
-  and just take the derivative of the objective \wrt $\beta_i$
+  just take the derivative of the objective \wrt $\beta_i$.
 \end{example}
 
 \bibliographystyle{scribebibsty}
