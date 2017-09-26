@@ -240,7 +240,7 @@ If $f(x)=g(x)+\sum_{i=1}^nh_i(x_i)$ where $g$ is convex and differentiable, h me
 Guess $x^{(0)}$.  Update according to:
 \begin{align*}
 x_1^{(k)}&\in \argmin_{x_1} f(x_1,x_2^{(k-1)},...,x_n^{(k-1)})\\
-x_2^{(k)}&\in \argmin_{x_2} f(x_1^{(k)},x_2,...,x_n^{(k-1)}) (minimize over whole vector or block)\\
+x_2^{(k)}&\in \argmin_{x_2} f(x_1^{(k)},x_2,...,x_n^{(k-1)}) \text{(minimize over whole vector or block)}\\
 ...&
 \end{align*}
 
@@ -248,7 +248,7 @@ x_2^{(k)}&\in \argmin_{x_2} f(x_1^{(k)},x_2,...,x_n^{(k-1)}) (minimize over whol
 \begin{example}[LASSO]
   (state of the art in LASSO software.)
   \begin{align*}
-    ||beta||&=\sum_{i=1}^P|\beta_i|\\
+    ||\beta||&=\sum_{i=1}^P|\beta_i|\\
     \beta_i&=S_{\lambda/||x_i||_2^2}(\frac{X_i^T(y-X_{-i}\beta_{-i})}{X_i^TX_i})\\
     \end{align*}
   and just take the derivative of the objective \wrt $\beta_i$
