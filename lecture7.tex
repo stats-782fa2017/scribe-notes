@@ -1,0 +1,299 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+
+
+% To be entered
+\setcounter{lecnum}{0}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Prof.\ McDonald}
+\newcommand{\chtitle}{Scribe template}
+\newcommand{\lecdate}{7 August 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+Given problem,
+\begin{equation}
+\left\{
+\begin{array}{lll}
+&\min\limits_x f(x)\\
+\text{s.t. } &h_i(x) \le 0\\
+&l_j(x) = 0
+\end{array}
+\right.
+\end{equation}
+The KKT conditions are
+\begin{enumerate}
+\item $0 \in \partial(f(x) + u^Th(x) + v^T l(x))$
+\item $u_i h_i = 0, \forall i$
+\item $h_i(x) \le 0, l_i(x) = 0$
+\item $v_i \ge 0, \forall i$
+\end{enumerate}
+
+\begin{itemize}
+\item Necessary (conditions) for optimality, under strong duality.
+\item Always sufficient for optimality.
+\item Duality gap\\
+for $x (u,v)$ feasible, $f(x) - f(x^*) \le f(x) - g(u,v)$
+\item Strong duality\\
+for some feasible $(u^*, v^*)$, any primal solution $x^*$ minimizes $L(x,u^*,v^*)$
+\end{itemize}
+
+
+\section{Conjugate Function}
+
+Given $f: \mathbb{R}^n \rightarrow \mathbb{R}$, $f^*: \mathbb{R}^n \rightarrow \mathbb{R}$
+\begin{equation}
+f^*(y) = \max\limits_x y^T x - f(x)
+\end{equation}
+
+
+\textbf{Note:} The conjugate function is always convex.
+
+``Largest gap between the line $y^T x$ and $f(x)$"
+
+If $f$ is differentiable, then this is called ``Lagradere transformable".
+
+\subsection*{Properties}
+\begin{itemize}
+\item Fenchel's inequality $\forall x, y$
+\begin{equation}
+f(x) + f^*(y) \ge x^T y
+\end{equation}
+\item $ \Longrightarrow f^{**} \le f$
+\item if $f$ is closed, convex, then $f^{**} = f$
+\item if $f$ is closed, convex, then $\forall x, y$
+\begin{align}
+x \in \partial f^*(y) & \Longleftrightarrow y \in \partial f(x)\\
+	& \Longleftrightarrow f(x) + f^*(y) = x^T y
+\end{align}
+\item If $f(u,v) = f_1(u) + f_2(v)$, then
+\begin{equation}
+f^*(w,z) = f^*_1(w) + f^*_2(z)
+\end{equation}
+
+\item If $f(x) = a g(x) + b$, then
+\begin{equation}
+ f^*(y) = a g^*(\frac{y}{a}) - b
+\end{equation}
+\item If $A\in \R^{n\times n}$, non-singular, $f(x) = g(Ax+b)$, then
+\begin{equation}
+f^*(y) = g^*(A^{-T} y) - b^T A^{-T} y
+\end{equation}
+\end{itemize}
+
+\subsection*{Examples}
+\begin{enumerate}
+\item $f(x) = x^T Q x$,  $Q \succ 0\\$
+\begin{align*}
+\max\limits_x y^T x - \frac{1}{2} x^T Q x\\
+\end{align*}
+Take partial derivative towards $x$ and set to 0,
+\begin{align*}
+y - Qx = 0 \Longrightarrow Q^{-1} y = x^*\\
+f^*(y) = \frac{1}{2} y^T Q^{-1} y
+\end{align*}
+\item If $f(x) = I_C(x) = \left\{
+\begin{array}{ll}
+0 &x\in C,\\
+\infty &\text{elsewhere.}
+\end{array}
+\right.$
+\begin{align*}
+f^*(y) = \max\limits_{x\in C} y^T x &&\text{support function}
+\end{align*}
+\item Dual norms\\
+Given a norm $||\cdot||$,
+\begin{align*}
+|y^T x| \le \|x\| \|y\|_*
+\end{align*}
+For $\ell_p$-norm,
+\begin{align*}
+(||x||_p)_* = ||y||_q\\
+\frac{1}{q} + \frac{1}{p} = 1
+\end{align*}
+Trace norm
+\begin{align*}
+(\|X\|_{tr})_* = \| X \|_{op} = \sigma_1(x)\\
+\|X\|_{**} = \|X\|
+\end{align*}
+Conjugate $f(x) = \|x\|$
+\begin{equation*}
+f^*(y) = I_{\{z:\|z\|_*\le 1\}} (y)
+\end{equation*}
+\item Squared norms $f(x) = \frac{1}{2} \| x \| ^2$,
+\begin{equation*}
+f^*(y) = \frac{1}{2} \| y \|_*^2
+\end{equation*}
+\item Affine function
+$f(x) = a^Tx + b$
+\begin{equation*}
+f^*(x) = \max\limits_x y^T x - a^T x - b
+\end{equation*}
+bounded if and only if $y = a$.
+\begin{equation*}
+f^*(y) = \left\{
+\begin{array}{ll}
+-b &  y = a\\
+\infty & \text{else}
+\end{array}
+\right.
+\end{equation*}
+\item $f(x) = -\log x \qquad \text{dom}(f): x > 0$
+\begin{equation*}
+f^*(y) = \max\limits_x y^T x + \log x
+\end{equation*}
+unbounded if $y \ge 0$\\
+$x^* = -\frac{1}{y}$
+\begin{equation*}
+f^*(y) = \left\{
+\begin{array}{ll}
+-\log(-y) - 1 & y<0\\
+\infty	& \text{else}
+\end{array}\right.
+\end{equation*}
+Why?
+\begin{equation*}
+-f^*(u) = \min\limits_x f(x) - u^T x
+\end{equation*}
+Try $\min\limits_x f(x) + g(x)$
+\begin{align*}
+\Longleftrightarrow \min\limits_{x, z} f(x) + g(z)\\
+\text{s.t. } x = z
+\end{align*}
+\begin{align*}
+g(u) &= \min\limits_{x, z} f(x) + g(z) + u^T(z-x)\\
+&= \min\limits_x \{f(x) - u^T x\} + \min_z\{g(z) - (-u)^T z\}\\
+&= -\max\limits_x\{u^Tx - f(x)\} - \max\limits_z\{(-u)^T z - g(z)\}\\
+&= -f^*(u) - g^*(-u)
+\end{align*}
+\item Dual of $\min\limits_x f(x) + \|x\|$ is
+\begin{equation*}
+\max\limits_u - f^*(u) - I_{\{z:\|z\|_*\le 1\}}(u)
+\end{equation*}
+\textbf{Ex}. Lasso
+\begin{align*}
+\min\limits_\beta \frac{1}{2} \|y - X\beta \|_2^2 + \lambda \|\beta\|_1\\
+\Longleftrightarrow \min\limits_{\beta, z}\frac{1}{2} \|y - z\|_2^2 + \lambda\|\beta\|_1\\
+\text{s.t. } z = X\beta
+\end{align*}
+Dual of $\frac{1}{2}\|v\|_2^2$ is $\frac{1}{2} \|v\|_2^2$
+\begin{equation*}
+g(u) = - \frac{1}{2}\|u\|_2^2 + y^T u - I_{\{v:\|v\|\le 1\}} (\frac{X^T u}{\lambda})
+\end{equation*}
+\end{enumerate}
+
+
+\bibliographystyle{scribebibsty}
+\bibliography{s782references}
+
+\end{document}
