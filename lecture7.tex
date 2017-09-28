@@ -104,11 +104,11 @@
 
 
 % To be entered
-\setcounter{lecnum}{0}
+\setcounter{lecnum}{7}
 \newcommand{\lecturer}{Prof.\ McDonald}
-\newcommand{\scribe}{Prof.\ McDonald}
-\newcommand{\chtitle}{Scribe template}
-\newcommand{\lecdate}{7 August 2017}
+\newcommand{\scribe}{Yisu Peng}
+\newcommand{\chtitle}{Duals and Conjugates}
+\newcommand{\lecdate}{14 September 2017}
 
 
 \begin{document}
@@ -159,9 +159,9 @@ f^*(y) = \max\limits_x y^T x - f(x)
 
 \textbf{Note:} The conjugate function is always convex.
 
-``Largest gap between the line $y^T x$ and $f(x)$"
+``Largest gap between the line $y^T x$ and $f(x)$".
 
-If $f$ is differentiable, then this is called ``Lagradere transformable".
+If $f$ is differentiable, then this is called ``Legendre transform'' of $f$.
 
 \subsection*{Properties}
 \begin{itemize}
@@ -216,6 +216,8 @@ Given a norm $||\cdot||$,
 \begin{align*}
 |y^T x| \le \|x\| \|y\|_*
 \end{align*}
+For Euclidean norm, the conjugate is still the Euclidean norm, and the inequality is called Cauchy-Schwarz inequality.
+
 For $\ell_p$-norm,
 \begin{align*}
 (||x||_p)_* = ||y||_q\\
