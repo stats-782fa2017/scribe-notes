@@ -1,0 +1,267 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\usepackage{dsfont}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\E}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+
+
+% To be entered
+\setcounter{lecnum}{11}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Chao Tao}
+\newcommand{\chtitle}{Concentration I}
+\newcommand{\lecdate}{26 September 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+\section*{Concentration}
+
+\section{Motivation}
+
+Suppose $\widehat{\theta}(X_1, \dots, X_n)$ is an estimator for $\theta$ with $X_i \stackrel{i.i.d.}{\sim} \mathcal{D}_{\theta}$. How good is $\widehat{\theta}$?
+
+Things we can demand are the following:
+\begin{enumerate}
+\item[1.] $\widehat{\theta}_n \rightarrow \theta$ (in $P, L_p, a.s., \dots$) as $n \rightarrow \infty$.
+\item[2.] $\P\left[ \norm{\widehat{\theta} - \theta} > \delta \right] < \epsilon$.
+\item[3.] $\E{ \norm{\widehat{\theta} - \theta} } < \epsilon$.
+\item[4.] what's the difference of the norm of $\widehat{\theta}_n - \theta$.
+\end{enumerate}
+
+The next question is that how do we find such $\delta, \epsilon$? $\theta$ is a R.V. however we don't know or can't find its distribution. It incentives us to look random variables.
+
+\section{Starting Point}
+
+Let $Z$ be non-negative. Then the following theorem holds.
+
+\begin{theorem}[Markov's inequality]
+$$\P[ Z \geq \delta ] \leq \frac{ \E{Z} }{ \delta}.$$
+\end{theorem}
+
+\begin{proof}{I}
+\begin{equation*}
+\begin{array}{ll}
+\E{Z} & = \int_{0}^{\infty} z p(z) dz \\
+& = \int_{0}^{\delta} z p(z) dz + \int_{\delta}^{\infty} z p(z) dz \\
+& \geq \int_{\delta}^{\infty} z p(z) dz \geq \delta \int_{\delta}^{\infty} p(z) dz = \delta \P[ Z \geq \delta],
+\end{array} 
+\end{equation*}
+where $p(z)$ is the pdf of R.V. $Z$.
+\end{proof}
+
+Here is another proof.
+
+\begin{proof}{II}
+Since $Z \geq \delta \mathds{1}(Z \geq \delta)$ always holds, take expectation for both sides and we will have $\E{Z} \geq \delta \cdot \E{ \mathds{1}(Z \geq \delta) } = \delta \P[ Z \geq \delta ]$.
+\end{proof}
+
+Actually, we can apply Markov's inequality to more general cases using one trick. Let $\phi$ be an non-decreasing, non-negative function on support of $Z$. Then it holds that 
+$$
+\P[ Z \geq \delta ] = \P[ \phi(Z) \geq \phi(\delta) ] \leq \frac{ \E{ \phi(Z) } }{\phi(Z)} .
+$$
+
+Let $\phi(t) = t^2$ and $Y = |Z - \E{Z} |$. We will get the following theorem.
+
+\begin{theorem}[Chebyshev's inequality]
+$$
+\P[ | Z - \E{Z} | \geq \delta ] \leq \frac{ \Var{Z} }{ \delta^2 }.
+$$
+\end{theorem}
+
+\section{Cram\'er-Chernoff method}
+
+Let $\phi(t) = e^{\lambda t}$ for some $\lambda > 0$. We will have $\P[ Z  > \delta ] \leq e^{-\lambda \delta} \E{ e^{\lambda Z} }$, where we can find that $\E{ e^{\lambda Z} }$ is the moment generating function of $Z$. Since this inequality holds for any $\lambda > 0$, it holds that 
+$$
+\P[ Z > \delta ] \leq \inf_{\lambda > 0} e^{-\lambda \delta} \E{ e^{\lambda Z} }.
+$$
+Define $\psi_Z(\lambda) = \log \E{ e^{\lambda Z} }, \forall \lambda > 0$. Then $\inf_{\lambda > 0} e^{-\lambda \delta} \E{ e^{\lambda Z} } = \inf_{\lambda > 0} \exp( -\lambda \delta + \psi_Z(\lambda) )$. Further define 
+$$
+\psi_Z^*(\delta) = \sup_{\lambda > 0} ( \lambda \delta - \psi_Z(\lambda) ).
+$$
+
+\begin{theorem}[Jensen's inequality]
+If $\phi$ is convex, it holds that 
+$$
+\phi( \E{Z} ) \leq \E{ \phi(Z) }.
+$$
+\end{theorem}
+
+We have the following three comments:
+\begin{enumerate}
+\item Since $\psi_Z( 0 ) = 0$, it holds that for all $Z$, $\psi_Z^*$ is non-negative;
+\item If $\E{Z}$ exists, by convexity and Jensen's inequality, we have $\psi_Z( \lambda ) \geq \delta \E{Z}$;
+\item If $\lambda < 0$, $\lambda \delta - \psi_Z(\lambda) \leq 0$. Thus $\sup$ occurs when $\lambda > 0$. We can extend the definition of $\psi_Z^*(\delta)$ to the following $
+\psi_Z^*(\delta) = \sup ( \lambda \delta - \psi_Z(\lambda) )$, which is the conjugate function of $\psi_Z(\lambda)$.
+\end{enumerate}
+
+\begin{theorem}[Chernoff inequality]
+$$
+\P[ Z \geq \delta ] \leq \exp( - \psi_Z^*(\delta) ).
+$$
+\end{theorem}
+
+The theorem becomes trivial if $ \psi_Z^*(\delta) = 0$. If $Z$ is centered, then $\psi_Z$ is continuously differentiable on $(0, b)$ for $0 < b \leq \infty$ and $\psi_Z'(0) = \psi_Z(0) = 0$. Also $\psi_Z$ is convex (strictly) unless $Z = C$ w.p. $1$. 
+
+We define $\lambda_{\delta} = ( \psi_Z' )^{-1}(\delta)$.
+
+\begin{example}
+We have $Z \sim \mathcal{N}(0, \sigma^2)$. We can find that $\psi_Z(\lambda) = \frac{\lambda^2 \delta^2}{2}$. Hence 
+$$
+\psi_Z^*(\delta) = \sup_{\lambda} \lambda \delta - \frac{\lambda^2 \delta^2}{2} = \frac{\delta^2}{ 2 \sigma^2}.
+$$
+Therefore, we have 
+$$
+\P[ |Z| > \delta ] \leq 2\exp\left( - \frac{\delta^2}{2 \sigma^2} \right).
+$$
+\end{example}
+
+There is also a similar inequality regarding the normal random variable (i.e. $Z \sim \mathcal{N}(0, 1)$).
+
+\begin{theorem}[Mill's inequality]
+$$
+\P[ |Z| \geq \delta ] \leq \frac{2}{\sqrt{2 \pi}} \exp( - \delta^2 / 2 ) / \delta.
+$$
+\end{theorem}
+
+\begin{example}
+We have $Y \sim Poisson(v)$. Define $Z = Y - v$. Hence, we have 
+$$
+\E{ e^{\lambda Z} } = e^{ - \lambda v - v} e^{ve^{\lambda}}.
+$$
+Therefore, $\psi_Z(\lambda) = v(e^{\lambda} - \lambda - 1)$ and $\psi_Z^*(\lambda) = v h(\delta / v)$ where $h(x) = (1 + x) \log (1 +x) - x $ for $x \geq -1$. So
+$$
+\P[ Z > \delta]  \leq \exp( - v h(\delta / v))].
+$$
+\end{example}
+
+
+Chernoff bound is nice because we can apply to sums or means. Suppose $Z = X_1 + \dots X_n$ where $X_i  = X \stackrel{i.i.d.}{\sim} \mathcal{D}$. Also, we have $\psi_{X_i}(\lambda) = \log \E{ e^{\lambda X_i}}$. Then $\psi_Z(\lambda) = \log \E{ e^{\lambda \sum_i X_i}} = \log \Pi_i \E{ e^{\lambda X_i}} = n \psi_X(\lambda)$. So
+$$
+\psi_Z^*(\delta) = n \psi_X^*( \delta / n).
+$$
+
+\begin{example}
+We have $X_1, \dots, X_n \stackrel{i.i.d.}{\sim} \mathcal{N}(0, \sigma^2)$. It holds that 
+$$
+\P[ |Z| > \delta ] \leq 2 \exp\left( - \frac{\delta^2}{2n\sigma^2} \right).
+$$
+
+Let $\bar{X} = \frac{1}{n} (X_1 + \dots + X_n)$. Then $\psi_{\bar{X}} = \log \E{ e^{\frac{1}{n} \sum_i X_i} } = n \psi_X( \lambda / n)$. So $\psi_{\bar{X}}^*(\delta) = n \psi_{X}^*(\delta)$. Then we will have the following ``tight" inequality.
+$$
+\P [ | \bar{X} | > \delta ] \leq exp\left( -\frac{\delta^2}{2 \sigma^2} \right). 
+$$
+
+\end{example}
+
+\bibliographystyle{scribebibsty}
+\bibliography{s782references}
+
+\end{document}
