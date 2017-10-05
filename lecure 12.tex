@@ -1,0 +1,259 @@
+
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+
+
+% To be entered
+\setcounter{lecnum}{12}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Adithya Vadapalli}
+\newcommand{\chtitle}{Concentration I}
+\newcommand{\lecdate}{7 August 2017}
+
+
+\begin{document}
+	\rule{6.5in}{1pt}
+	
+	\textsc{STAT--S 782
+		\hfill \thelecnum\ --- \chtitle
+		\hfill \lecdate}
+	
+	\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+	\rule{6.5in}{1pt}
+	
+	
+	\section*{Introduction}
+	In this lecture we will study sub-Gaussian Random Variables and study their properties.
+	
+	\section{Sub-Gaussian Random Variables}
+	Many important classes of random variables have tail probabilities decreasing at
+	least as rapidly as normally distributed random variables. In order to facilitate
+	the exploration of this phenomenon, we find it useful to formalize the notion of a
+	sub-Gaussian random variable.
+	\begin{definition} (Sub Gaussian)
+		Let $X$ be a Random Variable, If $\exists \sigma > 0$ such that, $\mathbb{E}[e^{(\lambda x)}] \le e^{\frac{\sigma^2 \lambda^2}{2}}$, then we call $X$ $\sigma$-Sub Gaussian.
+	\end{definition}
+	We will now show a few examples and prove that, they are indeed sub-Gaussian.
+	\begin{example}
+		Gaussian Random Variable with mean 0 and variance $\sigma^{2}$ is $\sigma$ sub-Gaussian.
+	\end{example}
+
+    \begin{example}(Radamachar Variable)
+    	$\P[X = 1] = \P[X = -1] = 1/2$ is sub-Gaussian with $\sigma = 1$
+    \end{example}
+	
+	We will prove that Radamachar Variable is indeed $1$-Sub Gaussian. 
+	\begin{proof}
+		\begin{align*} 
+		\mathbb{E}[e^{\lambda X}] &= e^{-\lambda} \P[X = -1] + e^{\lambda} \P[X = 1] \\ 
+		 &=  -1/2(e^{-\lambda} + e^{\lambda}) \\
+		 &= \cosh(\lambda) \\
+		 &= \sum_{k=0}^{\infty} \frac{\lambda^{2k}}{(2k)!} \\
+		 &\le \sum_{k=0}^{\infty} \frac{(\lambda^{2})^{k}}{2^{k} k!} \\
+		 &= e^{\lambda^{2}/2}
+		\end{align*}
+		Thus $\sigma = 1$
+	\end{proof} 
+	
+	\begin{example} 
+		Uniform Distribution between $[-a, a]$ is $a$-sub Gaussian.	
+	\end{example}
+	
+	We will prove this.
+	\begin{proof}
+		\begin{align*} 
+		\mathbb{E}[e^{\lambda X}] &=  -1/2a(e^{-\lambda x} + e^{\lambda x}) \\
+		&= \sinh(a\lambda) \\
+		&= \sum_{k=0}^{\infty} \frac{a \lambda^{2k}}{(2k + 1)!} \\
+		&= e^{a^{2}\lambda^{2}/2}
+		\end{align*}
+		Thus $\sigma = a$.
+	\end{proof}
+	
+	\section{Properties of Sub-Gaussian Random Variables}
+	In this section we will provide a few properties of the Sub-Gaussian Random Variables. We will not prove all the results.
+	\begin{theorem} Following statements hold true.
+		\begin{enumerate}
+			\item 	If $X_1$ is $\sigma_1$-sub Gaussian, then $aX_1$ is $|a|\sigma_1$ sub-Gaussian.
+			\item If $X_1$ is $\sigma_1$-sub Gaussian and $X_2$ is $\sigma_2$-sub Gaussian, then $X_1 + X_2$ is $(\sigma_1 + \sigma_2)$ sub Gaussian.
+			
+			\item  If $X_1$ is $\sigma_1$-sub Gaussian and $X_2$ is $\sigma_2$-sub Gaussian, and $X_1$ and $X_2$ are independent then - $X_1 + X_2$ is $\sqrt{\sigma_1^{2} + \sigma_2^{2}}$- sub Gaussian.
+		\end{enumerate}
+	
+	\begin{proof}. 
+		\begin{enumerate}
+			\item $\mathbb{E}[e^{\lambda a X}] \le e^{\lambda^2 a^2 \sigma^2 /2}$.
+			\item Follows from Independence.
+			\item
+			\begin{align*}
+			\mathbb{E}[e^{\lambda(X_1 + X_2)}] &\le \mathbb{E}[e^{\lambda X_1 p}]^{1/p} \mathbb{E}[e^{\lambda X_2 q}]^{1/q} \\
+							&\le (e^{\sigma_1^2/2 \lambda^2 p^2})^{1/p} (e^{\sigma_1^2/2 \lambda^2 q^2})^{1/q}\\
+							&= e^{\lambda^2/2 (p \sigma_1^2 + q \sigma_2^{2} )}\\
+							&= e^{\lambda^2 (\sigma_1 +  \sigma_2)^2/2}
+			\end{align*}
+
+		\end{enumerate}
+	\end{proof}
+	
+	\end{theorem}
+
+ \begin{theorem}
+ 	Suppose $\mathbb{E}[X = 0]$, then following are equivalent.
+ 	\begin{enumerate}
+ 	 \item  $\P[X > \delta]$ \textbf{OR} $\P[-X \ge \delta] \le e^{-\delta^{2}/2\sigma^{2}}$
+ 	 \item  For every integer $q \ge 1$, $\mathbb{E}[X^{2q}] \le 2q!(2\sigma^2)^q \le q! (4 \sigma^2)^q$
+ 
+ 	 \item $\exists \alpha$ such that $\mathbb{E}[e^{\alpha X^2}] \le 2$.
+ 	 \item $\mathbb{E}[e^{\lambda X}] \le e^{\sigma^2 \lambda^2 / 2}$ for some $\sigma^2$
+	\end{enumerate}	
+ \end{theorem}
+\begin{proof}
+	$4 \implies 1$ due to Chernoff Bound. $3 \implies 4$ and $4 \implies 3$ for $\sigma^2 \in [2/\alpha, 4/\alpha]$. We omit the remaining proofs. 
+\end{proof}
+
+\section{Bounded Random Variables}
+Bounded variables are an important class of sub-Gaussian
+random variables. The sub-Gaussian property of bounded random variables is
+established by the following lemma:
+\begin{lemma}(Hoeffding's Inequality)
+	Let $X$ be a Random Variable such that $\mathbb{E}[X] = 0$ and $\P[X \in [a,b]] = 1$, then: $\mathbb{E}[e^{\lambda X}] \le e^{\lambda^2(b - a)^2/8}$
+\end{lemma}
+\begin{proof}
+	Write $X$ as a convex combination $a$ and $b$. Define $\alpha = \frac{X - a}{b - a}$. $X = \alpha b + (1 - \alpha) X$ , $\alpha \in [0,1]$.
+	By Convexity we can write:
+	\begin{align*}
+	 e^{\lambda x} &\le \alpha e^{\lambda b} + (1 - \alpha) e^{\lambda a}\\
+	 				&= \frac{X - a}{b - a} e^{\lambda b} + \frac{b - \lambda}{b - a} e^{\lambda a} \\
+	 	\mathbb{E}[e^{\lambda x}] &\le \frac{-a}{b - a}e^{\lambda b} + \frac{b}{b - a}e^{\lambda a} \\
+	 	 &= e^{g(u)} \quad (u = \lambda(b - a))
+	\end{align*}
+	
+	$g(u) = -\gamma u + \log(1 - \gamma + \gamma e^2)$ where $\gamma = -a/(b - a)$
+	
+	Note that, 
+	\[
+	g(0) = g'(0) = 0 \text{and} g''(u) \le 1/4.
+	\] 
+	By Taylor's Theorem: 
+	\[
+	\exists x \in (0, u) \text{ \textit{such that} } g(u) = g(0) + u g'(0) + u^{2}/2 g''(u)
+	\]
+	
+	Note that, 
+	\[
+	u^2/2 g''(u) \le u^{2}/8 = \lambda^2 (b - a)^2 /8
+	\] 
+	
+	Thus we have 
+	\[
+	\mathbb{E}[e^{-\lambda x}] \le e^{g(u)} \le e^{\frac{\lambda^2 (b - a)^2}{8}}
+	\]
+	
+\end{proof}
+	
+	\bibliographystyle{scribebibsty}
+	\bibliography{s782references}
+	
+\end{document}
+
