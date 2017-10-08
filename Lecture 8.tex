@@ -1,0 +1,448 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+
+
+% To be entered
+\setcounter{lecnum}{8}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Jivitesh Poojary}
+\newcommand{\chtitle}{Optimization techniques}
+\newcommand{\lecdate}{19 September 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+
+\section{First Order Methods}
+Unconstrained optimization
+\begin{equation}
+\begin{aligned}
+	\min_x f(x)
+\end{aligned}
+\end{equation}
+assume x is convex and differentiable
+
+Gradient descent
+\begin{itemize}
+	\item Choose $x^{(0)}$
+	\item Iterate $x^{(k)} = x^{(k-1)} - t_k\nabla f(x^{(k)})$
+	\item Stop sometime
+\end{itemize}
+
+Why? \newline
+(Taylor expansion) \newline
+\begin{equation}
+\begin{aligned}
+f(y) \approx f(x) + \nabla f(x)^{T}(y-x) + \frac{1}{2}H||y-x||^{2}_{2}
+\end{aligned}
+\end{equation}
+
+Gradient descent says replace with - 
+\begin{equation}
+\begin{aligned}
+	\frac{1}{2} \frac{1}{t} I||y-x||^{2}_{2}
+\end{aligned}
+\end{equation}
+
+Choose $y=X^{+}$ to maximize - 
+\begin{equation}
+\begin{aligned}
+	x^{+} = x - t\nabla f(x)
+\end{aligned}
+\end{equation}
+
+What to use $t_k$ for?
+Need t to make it work
+Fixed (for all iterations)
+only works if t is exactly right
+Usually does not work
+
+Sequence
+\begin{equation}
+\begin{aligned}
+t_k \quad s.t.\sum_{k=1}^{\infty} t_k = \infty ,\quad
+              \sum_{k=1}^{\infty} t^{2}_k < \infty
+\end{aligned}
+\end{equation}
+
+Back tracking line search \\
+At each iteration choose best t \\
+1. Set $0 <\beta < 1 , 0 < \alpha <\frac{1}{2}$\\
+$t_{init}$
+
+2. At each k \\
+While $f(x^{k} - t\nabla f(x^{k})) > f(x^{k}) - \alpha t || f(x^{k}) ||^{2}_{2} $ (To get strong convex term) \\
+	$\quad$ set $t = \beta t $(shrink t) \\
+$x^{T} = x - t \nabla f(x)$
+approximation to fixed line search
+
+Could solve (at each k) \\
+\begin{equation}
+\begin{aligned}
+t = \argmin_{s >= 0} f( x^{(k)} - s f(x^{(k-1)})) 
+\end{aligned}
+\end{equation}
+(this equation is usually not solvable) \\
+Exact line search
+
+
+\begin{theorem}
+If f is convex and differentiable
+\begin{equation}
+\begin{aligned}
+	|| \nabla f(x) - \nabla f(y) ||_2 \leq L||x-y||_2  \\ (Lipschitz) \\
+	if , t(fixed) \leq \frac{1}{2} \\
+\end{aligned}
+\end{equation}
+GD satisfies \\
+\begin{equation}
+\begin{aligned}
+	f(x^{(k)}) - f^{(*)}<= \frac{||x^{(0)} - x^k||^{2}_{2}}{2tk}
+\end{aligned}
+\end{equation}
+
+convergence rate $ {O}(\frac{1}{k})$ \\
+
+more accurate we want the slower we get.
+this was with week condition
+\end{theorem}
+
+\begin{theorem}
+If f strongly convex with previous conditions
+\begin{equation}
+\begin{aligned}
+	f(x^{(k)}) - f^{(*)} <= C^{k}\frac{L}{2}||x^{(0)} - x{(k)}||_2^{2}
+\end{aligned}
+\end{equation}
+
+(if strong convexity, convergence is exponentially fast)
+\end{theorem}
+
+\begin{example}
+\begin{equation}
+\begin{aligned}
+	f(x) = \frac{1}{2} ||b - Ax||_2^{2}
+\end{aligned}
+\end{equation}
+
+if we want Lipschitz $\nabla$ \\
+\begin{equation}
+\begin{aligned}
+	\nabla^{2}f = A^{T}A \leq LI = \sigma_{max}^{2} (A)I
+\end{aligned}
+\end{equation}
+(as long as larger singular value)
+
+if we want strong convexity.
+\begin{equation}
+\begin{aligned}
+	\nabla^{2}f \geq mI = \sigma_{min}^{2} (A)I
+\end{aligned}
+\end{equation}
+
+(minimum eigenvalue)
+need A as full rank
+
+c depends on $\frac{1}{m}$, if $m < 0$ then will be slow
+
+stop if $||\nabla f(x^{k-1})||_2$is small
+\end{example}
+
+
+Stochastic Gradient descent (SGD) \\
+- Objective function as sum of individual function, GD becomes \\
+\begin{equation}
+\begin{aligned}
+	\min_x \sum_{i=1}^{m} f_i(x) \\
+	x_{(k)} = x_{(k-1)} - tk \sum_{i=1}^{m} \nabla f_i(x^(k-1)) \\
+	x_{(k)} = x_{(k-1)} - tk\nabla f_{ik}(x^(k-1)) \\
+	i_k \in {1,....,m}
+\end{aligned}
+\end{equation}
+
+Pick $i_k$? \\
+usually $i_k = 1,...,m,1,...,m, $ (cyclic option) \\
+OR \\
+$i_k ~ unif({1,m})$ \\
+SGD works best when you are far from the optimum not when you are close to optimum
+
+Good idea? \\
+- Large datasets \\
+- Curvature is flat \\
+Norm is small but you may not be at the optimal\\
+
+
+Subgradient descent (f not differentiable) \\
+\begin{equation}
+\begin{aligned}
+	X^k = x^{k-1} - t_kg^{(k-1)} \\
+	g^{(k-1)} \in \delta f(x^{(k-1)})  \\
+\end{aligned}
+\end{equation}
+not a descent method \\
+not guaranteed $x^k$ is better than $x^{k-1}$, keep track of current value \\
+$t_k$ fixed or square summable ($\frac{t_0}{k}$)
+
+\begin{theorem}
+If f is Lipschitz, rate $O(\frac{1}{\sqrt{k}})$ \\
+It is worst than gradient descent
+\end{theorem}
+
+\begin{example}
+$\min_{\beta} \frac{1}{2}||y - X\beta||_2^2 + \lambda||\beta_i||$
+
+subdifferential  \\
+\begin{equation}
+\begin{aligned}
+	g(\beta) = -X^T(y - X\beta) + \lambda\delta||\beta||_1 \\
+	-X^T(y - X\beta) + \lambda v \\
+    v_i =
+    \begin{cases}
+    	\{1\}      & \quad \text{if } \beta_i > 0\\
+    	\{1\}	   & \quad \text{if } \beta_i < 0\\
+        [-1,1]     & \quad \text{if } \beta_i = 0\\
+    \end{cases}
+\end{aligned}
+\end{equation}
+
+So $sign(\beta) \in \delta||\beta||_1$ 
+
+From KKT (stationarity) \\
+\begin{equation}
+\begin{aligned}
+	\lambda v = X^T(y - X\beta) \\
+	X_i^{T}(y - X\beta) = \lambda v_i \\
+	\lambda sign(\beta_i) , \quad iff \quad B_i \neq 0 \\
+	X_i^T(y - X\beta) <= \lambda, \quad iff \quad \beta_i = 0
+\end{aligned}
+\end{equation}
+This gives LARS algorithm
+\end{example}
+
+Proximal gradient descent
+Decomposable f(x) = g(x) + h(x)
+
+g is convex, differentiable (do GD on g only)
+h is convex only 
+
+\begin{equation}
+\begin{aligned}
+x^{+} = \argmin_Z g(x) + \nabla g(x)_T(z-x) + \frac{1}{2t}||z-x||_2^2 + h(2)
+\end{aligned}
+\end{equation}
+
+approximate the hessian,
+
+\begin{equation}
+\begin{aligned}
+ 	= \argmin_Z + \frac{1}{2t}||z-(x - t\nabla g(x))||_2^2 + h(2) \\
+	prox_t(x) := \argmin_Z \frac{1}{2t}||x-z||_2^2 + h(Z) \\
+\end{aligned}
+\end{equation}
+
+only depends on h not y
+
+\begin{equation}
+\begin{aligned}
+	x^(k) = prox_{tk}(x^(k-1) - t_k\nabla g(x^(k-1))) \\
+\end{aligned}
+\end{equation}
+
+\begin{example} 
+LASSO (ISTA) - 
+Iterative soft thresholding for $L_1$ norm
+\begin{equation}
+\begin{aligned}
+	\min_{\beta} = \frac{1}{2} ||y-X\beta||_2^2 - \lambda ||\beta||_1 \\
+	prox_{t}(\beta) = \argmin_Z \frac{1}{2t}||\beta - Z||_2^2 + \lambda||Z||_1 \\
+ 					= S_{\lambda t}{\beta} \\
+					(soft\quad thresholding) \\
+    S_{\tau}(\beta) =
+  	\begin{cases}
+    	\beta_i - \tau       & \quad \text{if } \beta_i > \tau\\
+    	0		             & \quad \text{if } -\tau \leq \beta_i \leq \tau\\
+        \beta_i + \tau       & \quad \text{if } \beta_i < -\tau\\
+  	\end{cases}
+    \\
+	\beta_{+} = S_{\lambda t}(\beta + tX^T(y-X\beta)) \\
+\end{aligned}
+\end{equation}
+
+\end{example}
+
+Projected gradient descent: \\
+\begin{equation}
+\begin{aligned}
+	min_{x \in C} f(x) \\
+	take,\quad g(x) = f(x) \\
+			   h(x) = I_c(x) \\
+	prox(x) = \argmin_{Z \in C}||x - Z||_2^2 \\
+	x^{+} = P_c(x - t\nabla g(x)) \\
+\end{aligned}
+\end{equation}
+
+Where $P_c$ project onto C
+
+All algorithms discusses here also have accelerator versions. Use information from previous updates
+
+
+\section{Second Order Methods}
+Good option if you can take 2 derivatives \\
+1. Newton's method - f(x) 2x differentiation
+\begin{equation}
+\begin{aligned}
+	x^{+} = x - (\nabla_2 f(x))_{-1}\nabla f(x)
+\end{aligned}
+\end{equation}
+
+Hessian scales with the problem,
+\begin{equation}
+\begin{aligned}
+	\nabla^2 f(x) \approx \frac{1}{t} I
+\end{aligned}
+\end{equation}
+may not converge
+
+Damped Newton
+\begin{equation}
+\begin{aligned}
+	X^{+} = x - t(\nabla^2 f(x))^{-1} \nabla f(x) \\
+\end{aligned}
+\end{equation}
+use backtracking to get t
+
+\begin{theorem}
+f convex 2x differentiation, Strongly convex
+\begin{equation}
+\begin{aligned}
+	\nabla f \quad Lipschitz \\
+	\nabla^2 f \quad Lipschitz \\
+	f(x) - f^*=
+  \begin{cases}
+    f(x^0) - f^* - \gamma k       & \quad \text{if } k \leq k_0\\
+    C(\frac{1}{2})^(2^(k - k_0 + 1))  & \quad \text{if } k > k_0
+  \end{cases}
+\end{aligned}
+\end{equation}
+\end{theorem}
+
+\subsection{Other Methods}
+Barrier Method \\
+Primal Dual Interior Point method \\
+BFGS and Quasi Newton \\
+
+
+
+\bibliographystyle{scribebibsty}
+\bibliography{s782references}
+
+\end{document}
