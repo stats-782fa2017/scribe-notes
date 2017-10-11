@@ -1,0 +1,315 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}[1]{\mathbb{P}\!\left[#1\right]}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+\usepackage{commath}
+
+
+% To be entered
+\setcounter{lecnum}{12}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Lei Ding}
+\newcommand{\chtitle}{Concentration Inequalities III}
+\newcommand{\lecdate}{3 Oct 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+More details about this lecture can be found on \cite{BoucheronLugosi2013} in chapter 2.
+
+
+\section{Sub-gamma Random Variables}
+
+\begin{definition}[Sub-gamma random variables]
+A real-valued centered random variable $X$ is said to be \textbf{sub-gamma on the right tail 
+with variance factor $\sigma$ and scale parameter $c$} if 
+\begin{equation}
+\psi_X(\lambda) = log \Expect{e^{\lambda X}} \le \frac{\lambda^2 \sigma}{2(1-c \lambda)} 
+\qquad for \ \forall \lambda \in (0, \frac{1}{c})
+\end{equation}
+We denote as $X \sim \Gamma _{+}(\sigma, c)$.
+Similarly, $X$ is said to be \textbf{sub-gamma on the left tail with variance factor 
+$\sigma$ and scale parameter $c$} if $-X$ is sub-gamma on the right tail 
+with variance factor $\sigma$ and scale parameter $c$.
+We denote as $X \sim \Gamma _{-}(\sigma, c)$.
+Finally, $X$ is said to be \textbf{sub-gamma
+with variance factor $\sigma$ and scale parameter $c$} if
+$X$ is sub-gamma both on the right and left tails with the same variance factor $\sigma$
+and scale parameter $c$.
+We denote as $X \sim \Gamma(\sigma, c)$.
+\end{definition}
+
+Observe that $\Gamma(\sigma, 0) = \cal{G}(\sigma)$.
+
+
+\begin{example}[centered gamma variable is a typical example of a sub-gamma variable]
+Let $Y \sim Gamma(a, b)$, that is $Y$ has density
+\begin{equation}
+f(y) = \frac{y^{a-1}e^{-y/b}}{\Gamma(a)b^a} , \qquad y \ge 0
+\end{equation}
+Also, we have $\Expect{Y} = ab$ and $\Var{Y} = ab^2$. 
+Let$X = Y -\Expect{Y}$. We first consider the right tail of $X$.
+Then for all $0 < \lambda < 1/b$,
+
+\begin{equation}
+\psi_X(\lambda) = a (- log(1 - \lambda b) - \lambda b) \le \frac{\lambda^2ab^2}{2(1-b\lambda)}
+\end{equation}
+
+that is $X \sim \Gamma _{+}(ab^2, b)$. Similarly we can prove that for the left tail
+$X \sim \Gamma _{-}(ab^2, 0)$. Thus $X \sim \Gamma (ab^2, b)$.
+
+\end{example}
+
+\begin{theorem}
+Let $X$ be a centered random variable.Then for some $v > 0$,
+the following statements are equivalent
+\begin{enumerate}
+\item $\Expect{X^{2q}} \le q ! (8v)^q + (2 q )! (4c)^{2q}$ \quad for every integer $q \ge 1$
+\item $X \in \Gamma(4(8v + 16c^2), 8c)$
+\item $\P{ X > \sqrt{8(8v + 16c^2)t} +8ct }  \lor \P{  -X > \sqrt{8(8v + 16c^2)t} +8ct } \le e^{-t}$ \quad 
+for every $t > 0$
+\end{enumerate}
+\end{theorem}
+
+\section{Maximal Inequalities}
+Intuition: If we know the information about the Cram$\acute{e}$r transform of random variables in a finite collection,
+how can we use this information to bound the expected maximum of these random variables?
+
+For example, if $Z_1, \cdots, Z_n$ follows i.i.d. $\sigma$-sub-Gaussian, 
+we want to get a upper bound for $\Expect{\max\limits_{i=1, \cdots, n}Z_i}$. By Jensen's inequality
+
+\begin{align}
+\exp{(\lambda \Expect{\max\limits_{i=1, \cdots, n}Z_i})} & \le \Expect{\exp{(\lambda \max\limits_{i=1, \cdots, n}Z_i})} \\
+& = \Expect{\max\limits_{i=1, \cdots, n} e^{\lambda Z_i}} \\
+& \le \sum_{i=1}^n \Expect{e^{\lambda Z_i}} \\
+& \le n e^{\lambda^2 \sigma^2 /2}
+\end{align}
+
+Take logarithms on both sides, we have
+\begin{equation}
+\Expect{\max\limits_{i=1, \cdots, n}Z_i} \le \frac{\log{n}}{\lambda} + \frac{\lambda \sigma^2}{2}
+\end{equation}
+
+for any $\lambda > 0$. This upper bound is minimized for $\lambda = \sqrt{2 \log{n} / \sigma^2}$,
+which yields
+\begin{equation}
+\Expect{\max\limits_{i=1, \cdots, n}Z_i} \le  \sigma \sqrt{2 \log{n}}
+\end{equation}
+
+\begin{theorem}
+Let $Z_1, \cdots, Z_n$ be independent random variables such that for any $\lambda \in (0, b)$ and 
+$i = 1, \cdots, n$, $\psi_{Z_{i}}(\lambda) \le \psi(\lambda)$, where $\psi$ is a convex and continuously differentiable function on $[0, b)$, with $0 < b \le \infty$ and $\psi(0) = \psi'(0)=0$. Then
+\begin{equation}
+\Expect{\max\limits_{i=1, \cdots, n}Z_i} \le \psi^{*-1}(\log{n})
+\end{equation}
+where
+\begin{equation}
+\psi^{*}(t) = \sup\limits_{\lambda \in (0, b)} (\lambda t - \psi(\lambda))
+\end{equation}
+\end{theorem}
+
+Useful results:
+\begin{enumerate}
+\item If $Z_i \in \Gamma_{+}(v, c)$, then $\Expect{\max\limits_{i=1, \cdots, n}Z_i} \le \sqrt{2v \log{n}} + c\log{n}$
+\item If $Z_i \sim \chi^2(p) - p$, then $Z_i \in \Gamma_{+}(2p, 2)$
+\end{enumerate}
+
+\section{Inequalities for sum of independent random variables}
+
+\begin{theorem}[Hoeffding's Inequality]
+Let $X_1, \cdots, X_n$ be independent random variables such that $X_i$ takes its values in $[a_i, b_i]$
+almost surely for all $i=1, \cdots, n$. Then for every $\delta > 0$,
+\begin{equation}
+\P{\sum_{i=1}^{n} (X_i - \Expect{X_i}) \ge \delta} \le \exp{(- \frac{2 \delta^2}{\sum_{i=1}^{n} (b_i - a_i)^2})} 
+\end{equation}
+Furthermore, if $X_1, \cdots, X_n$ are i.i.d. random variables and each $X_i$ takes its values in $[a, b]$
+almost surely, then for every $\delta > 0$,
+\begin{equation}
+\label{equ:Hoeffding2}
+\P{\bar{X} - \Expect{X} \ge \delta} \le \exp{(- \frac{2 n \delta^2}{(b - a)^2})}
+\end{equation}
+\end{theorem}
+
+
+\begin{theorem}[Bennett's Inequality]
+Let $X_1, \cdots, X_n$ be independent random variables with finite variance 
+such that $X_i \le b$ for some $b > 0$
+almost surely for all $i=1, \cdots, n$. 
+Let $ v = \sum_{i=1}^{n} \Expect{X_i^2}$.
+Then for every $\delta > 0$,
+\begin{equation}
+\P{\sum_{i=1}^{n} (X_i - \Expect{X_i}) \ge \delta} \le \exp{(- \frac{v}{b^2} h(\frac{b\delta}{v}))} 
+\end{equation}
+where
+\begin{equation}
+h(u) = (1+u) \log{(1+u)} -u
+\end{equation}
+for $u > 0$.
+\end{theorem}
+
+\begin{corollary}[Bernstein's Inequality]
+Let $X_1, \cdots, X_n$ be independent random variables with finite variance 
+such that $X_i \le b$ for some $b > 0$
+almost surely for all $i=1, \cdots, n$. 
+Let $ v = \sum_{i=1}^{n} \Expect{X_i^2}$.
+Then for every $\delta > 0$,
+\begin{equation}
+\P{\sum_{i=1}^{n} (X_i - \Expect{X_i}) \ge \delta} \le \exp{(- \frac{\delta^2}{2(v + b\delta/3)} )} 
+\end{equation}
+\end{corollary}
+
+Proof hint: use $h(u) = (1+u) \log{(1+u)} -u \ge \frac{u^2}{2(1+u/3)}$
+
+
+\begin{example}[Gaussian chaos of order two]
+Let $X \sim N_n(0, I)$, $A$ be a symmetric $n \times n$ matrix with $0$ along the diagonal.
+Let $Z = X^t AX$. Then for every $\delta > 0$,
+\begin{equation}
+\P{Z > \delta} \le \exp{(- \frac{\delta^2}{4\norm{A}_F^2 + \norm{A} \delta} )} 
+\end{equation}
+Proof:(sketch)
+\begin{enumerate}
+\item $Z \sim \sum_{i=1}^n u_i (X_i^2 -1)$, where $u_i$ are eigenvalues of $A$
+\item $\psi_{X_i^2 -1} (\lambda) = \frac{1}{2} (- \log(1-2\lambda) -2\lambda) \le \frac{\lambda^2}{1-2\lambda}$, for all $\lambda < 1/2$
+\item $\psi_{Z} (\lambda) = \sum_{i=1}^{n} \frac{1}{2} (- \log(1-2 u_i \lambda) -2 u_i \lambda) \le \sum_{i=1}^{n} \frac{u_i^2 \lambda^2}{1-2(u_i)_{+}\lambda} \le \frac{\lambda^2 \norm{A}_F^2}{1-2\lambda \norm{A}}$, for all $\lambda \in (0, 1/(2 max_i u_i))$
+\end{enumerate}
+\end{example}
+
+
+\begin{example}[application to ecdf]
+Let $X_1, \cdots, X_n$ be i.i.d. random variables. 
+Consider the empirical cumulative distribution function (ecdf) 
+$\hat{F}(x) = \frac{1}{n} \sum_{i=1}^{n} I(X_i \le x)$. Then for any $\epsilon > 0$,
+\begin{equation}
+\P{\abs{\hat{F}(x) - F(x)} > \epsilon} \le 2 e^{-2n \epsilon^2}
+\end{equation}
+Meanwhile, we have DKW inequality
+\begin{equation}
+\P{\sup_x \abs{\hat{F}(x) - F(x)} > \epsilon} \le 2 e^{-2n \epsilon^2}
+\end{equation}
+Proof:(sketch)
+Define $Y_i = I(X_i \le x)$, then $Y_i \in \{0, 1\}$, $\Expect{Y_i} = \Expect{I(X_i \le x)} = F(X)$. 
+By applying Hoeffding's Inequality in \autoref{equ:Hoeffding2} with $b=1$, $a=0$, we can prove the
+first inequality. 
+\end{example}
+
+
+
+
+
+
+
+
+
+
+\bibliographystyle{scribebibsty}
+\bibliography{s782references}
+
+\end{document}
