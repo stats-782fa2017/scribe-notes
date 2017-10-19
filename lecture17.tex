@@ -1,0 +1,227 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+%\usepackage{pdfsync}
+\usepackage{hyperref}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+
+
+% To be entered
+\setcounter{lecnum}{17}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Arash Khodadadi}
+\newcommand{\chtitle}{Risk minimization}
+\newcommand{\lecdate}{19 October 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+
+\begin{corollary}
+	\label{thm:convergence-1}
+	$\forall p \in \mathcal{P}$ , $\forall n$ , $\forall \hat{f}$ , $\mathcal{F}: Z\longmapsto [0,1]$ 
+	
+	  \begin{enumerate}
+		\item [(1)] $\mathcal{R}(\hat{f}) \le \hat{\mathcal{R}}(\hat{f})+\mathcal{R}_n(\mathcal{F})+\sqrt{\frac{\log 1/\delta}{2n}}$ with probability at least $1-\delta$
+		\item [(2)] $\mathcal{R}(\hat{f}_{ERM}) \le \mathcal{R}(f^*)+2\mathcal{R}_n(\mathcal{F})+\sqrt{\frac{2\log 1/\delta}{n}}$
+	\end{enumerate}
+\end{corollary}
+
+\textbf{Proof:}
+By McDiarmid inequality:
+
+\begin{equation}
+P(\Delta_n(\mathcal{F})-\mathbb{E}[\Delta_n(\mathcal{F})] \ge t) \le e^{-2nt^2}
+\end{equation}
+
+So with probability at least $1-\delta$, $t=\sqrt{\frac{\log 1/\delta}{2n}}$:
+
+\begin{equation}
+\Delta_n(\mathcal{F}) \le \mathbb{E}[\Delta_n(\mathcal{F})] + \sqrt{\frac{\log 1/\delta}{2n}}
+\end{equation}
+
+Then using the theorem in the previous lecture we get part (1). Also the following gives part (2):
+
+\begin{equation}
+\mathcal{R}(\hat{f}) \le \mathcal{R}(f^*)+2\bigg(\mathcal{R}_n(\mathcal{F})+\sqrt{\frac{\log 1/\delta}{2n}}\bigg)
+\end{equation}
+
+\section{Properties of $\mathcal{R}_n(\mathcal{F})$}
+
+\begin{theorem}[\cite{bartlett_rademacher_2003}]
+	Let $\mathcal{F},\mathcal{F}_1,...,\mathcal{F}_k,\mathcal{H}$ be classes of functions:
+	\begin{enumerate}
+		\item [(1)] If $\mathcal{F} \subseteq \mathcal{H}$ then $\mathcal{R}_n(\mathcal{F}) \le \mathcal{R}_n(\mathcal{H})$
+		\item [(2)] $\mathcal{R}_n(\mathcal{F})=\mathcal{R}_n(conv\,\, \mathcal{F})=\mathcal{R}_n(abs \,\, conv \,\, \mathcal{F})$
+		\item [(3)]  $\mathcal{R}_n(c\mathcal{F})=|c| \cdot \mathcal{R}_n(\mathcal{F})$
+		\item [(4)] $\phi:\mathbb{R} \longmapsto \mathbb{R}$ and $\phi$ is L-Lipshcitz and $\phi(0)=0$ then $\mathcal{R}_n(\phi \circ \mathcal{F}) \le 2L \mathcal{R}_n(\mathcal{F})$
+		\item [(5)] For any uniformely bounded $h$ we have $\mathcal{R}_n(\mathcal{F}+h) \le \mathcal{R}_n(\mathcal{F})+||h||_\infty / \sqrt{n}$
+		\item [(6)] $1 \le q \le \infty$ define $\mathcal{L}(\mathcal{F},h,q)=\{|f-h|^q: f \in \mathcal{F}\}$, if $||\mathcal{F}-h||_\infty \le 1$ , $\forall f$ then $\mathcal{R}_n(\mathcal{L}(\mathcal{F},h,q)) \le 2q\big( \mathcal{R}_n(\mathcal{F}) + ||h||_\infty / \sqrt{n} \big)$
+		\item [(7)] $\mathcal{R}_n(\sum_{i=1}^{k}\mathcal{F}_i) \le \sum_{i=1}^{k} \mathcal{R}_n(\mathcal{F}_i)$
+	\end{enumerate}
+\end{theorem}
+
+\section{Examples}
+
+\begin{lemma}
+	Let $x \in \mathbb{R}^p$, define $\mathcal{F}=\{x \longmapsto \langle x,w \rangle , w \in \mathbb{R}^p , ||w||_1 \le 1\}$. $\forall x_1,...,x_n \in \mathbb{R}^p$: $\hat{\mathcal{R}}_n(\mathcal{F}) \le \frac{2}{n} \max_j ||x_j||_2 \sqrt{2\log p}$.
+\end{lemma}
+
+\textbf{Proof:}
+
+\begin{equation}
+\begin{aligned}
+\mathbb{E}_\sigma \bigg[ \sup_{f \in \mathcal{F}} \frac{2}{n} \sum\sigma_i f(x_i) \bigg] & =  \mathbb{E}_\sigma \bigg[ \sup_{||w||_1 \le 1} \frac{2}{n} \sum\sigma_i \langle w,x_i \rangle \bigg]\\
+ & =  \mathbb{E}_\sigma \bigg[ \sup_{||w||_1 \le 1} \langle w,\frac{2}{n} \sum\sigma_ix_i \rangle \bigg]\\
+  & =  \mathbb{E}_\sigma \bigg[ \max_{j}\frac{2}{n} \sum_i \sigma_i x_{ij} \bigg]\\
+  & =  \frac{2}{n} \mathbb{E}_\sigma \bigg[ \max_{j} Z_j \bigg] \,\, , \,\, Z_j=\sum_i \sigma_i x_{ij}\\
+\end{aligned}
+\end{equation}
+
+Now we have:
+
+\begin{equation}
+ \mathbb{E}_\sigma \big[ e^{\lambda Z_j} \big] =  \mathbb{E}_\sigma \big[ e^{\lambda \sum_i \sigma_i x_{ij}} \big]=\prod_{i=1}^{n} \mathbb{E}_\sigma \big[ e^{\lambda \sigma_i x_{ij}} \big]  \le \prod_{i=1}^{n}  e^{\lambda^2  x_{ij}^2 / 2} = e^{\lambda^2  ||x_{j}||_2^2 / 2}
+\end{equation} 
+
+\noindent and so $Z_j$ is $||x_j||_2$ sub-Gaussian and so:
+
+\begin{equation}
+\mathbb{E} \max_j Z_j \le \log\bigg( \sum_{j=1}^{p}  e^{\lambda^2  ||x_{j}||_2^2 / 2} \bigg) \le \log \bigg( p e^{\lambda^2  \max_j ||x_{j}||_2^2 / 2} \bigg)
+\end{equation}
+
+Now from Lecture 12, we get:
+
+\begin{equation}
+\hat{\mathcal{R}}(\mathcal{F}) \le \frac{2 \max_j ||x_j||_2}{n} \sqrt{2 \log p}
+\end{equation}
+
+\subsection{Neural networks}
+
+\begin{theorem}
+	Suppose $\sigma:\mathbb{R} \longmapsto [-1,1]$ is the activation function and is L-Lipshcitz and $\sigma(0)=0$. Define $\mathcal{F}$ to be a 2-layer neural network with 1-norm constraints on the weights: $\mathcal{F}=\{x \longmapsto \sum_i w_i \sigma(\langle v_i,x \rangle)  : ||w||_1 \le 1, v_i \le B\}$. Then for inputs $x_1,...x_n \in \mathbb{R}^p$: $\hat{\mathcal{R}}(\mathcal{F}) \le \frac{2LB}{n} \max_j ||x_j||_2  \sqrt{2 \log p}$.
+\end{theorem}
+ 
+\subsection{Kernel methods}
+
+A side on kernel methods: 
+
+\begin{enumerate}
+	\item To every kernel $k: \mathcal{X} \times \mathcal{X} \longmapsto \mathbb{R}$, we can associate a feature map $\Phi: \mathcal{X} \longmapsto \mathcal{H}$, where $\mathcal{H}$ is the Hilbert space with inner product $\langle .,. \rangle$ and $\forall x_1,x_2 \in \mathcal{X}$: $k(x_1,x_2)=\langle \Phi(x_1),\Phi(x_2) \rangle$.
+	
+	\item If $||.||$ is the norm on $\mathcal{H}$, then $||\sum\alpha_2 \Phi(x_i)||^2=\sum_{i,j}\alpha_i\alpha_j k(x_i,x_j)$.
+\end{enumerate}
+ 
+\begin{theorem}
+	For $x_a,...,x_n$ random elements of $\mathcal{X}$, let $l:\mathcal{Y}\times \mathbb{R} \longmapsto [0,1]$ be L-Lipshcitz with $l(0)=0$. Define $\mathcal{F}=\{ x \longmapsto \sum \alpha_i k(x,x_i) ,  \sum_{i,j}\alpha_i\alpha_j k(x_i,x_j) \le B^2 \} \subseteq \{ x  \longmapsto \langle w,\Phi(x) \rangle : ||w|| \le B \}$, then $\mathcal{R}_n (l \circ \mathcal{F}) \le 4BL \sqrt{\frac{\mathbb{E} k(x,x)}{n}}$.
+\end{theorem}
+   
+\bibliographystyle{scribebibsty}
+\bibliography{s782references}
+
+\end{document}
