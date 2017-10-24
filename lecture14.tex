@@ -1,0 +1,231 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{braket}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Z}{\mathcal{Z}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\Fun}{\mathcal{F}}
+
+
+% To be entered
+\setcounter{lecnum}{14}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Dmitrii Avdiukhin}
+\newcommand{\chtitle}{Learning}
+\newcommand{\lecdate}{10 October 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+Consider PAC-learning (probably approximate correct)~-- small generalization error with high probability.
+We see data $D_n = \{(X_i, Y_i)\}_{i=1}^n$, $X_i \in \X$, $Y_i \in \Y$.
+Assume that there is some joint distribution $P(X,Y)$.
+We want to learn $f: \X \to \Y$ such that.
+In this course we start with ``realizable'' setting: $Y = f(x)$, deterministic.
+Then we will consider ``agnostic'', ``model-free'' setting.
+
+\section{Realizable set}
+
+Consider set $\X$ and $\mathcal P$~-- a set of distributions on $\X$.
+We have data $D_n$ drawn from some $P \in \Pcal$
+
+\subsection{Concept learning}
+\begin{itemize}
+  \item We assume that there is some class $\C$ of subsets of $\X$. $\C$~-- concept classes.
+  \item There exist a target $C^* \in \C$.
+  \item We observe $Y_i = I(X_i \in C^*)$~-- whether $X_i$  belongs to $C^*$.
+  \item We want to determine $C^*$.
+  \item We want some procedure (algorithm) to do this: $\A = \set{A_n}_{n=1}^\infty$.
+        $\A$ can depend on $\Pcal$ but not on $P$.
+\end{itemize}
+Similar to statistics, but different language.
+We will denote $Z_i = (X_i, Y_i) \in \Z$.
+
+Given $D_n$ we want to produce $\hat{C}_n = A_n(D_n) = A_n(Z_1, \ldots, Z_n) \in \C$.
+We evaluate $\hat{C}_n$ by examination, whether $X_{n+1} \in \hat{C}_n$ for new $X_{n+1}$.
+Two types of errors:
+\begin{enumerate}
+  \item $X_{n+1} \in C^*$ but not in $\hat C_n$.
+  \item $X_{n+1} \in \hat C_n$ but not in $C^*$.
+\end{enumerate}
+In other words, $X_{n+1} \in C^* \Delta \hat C_n$~-- symmetric difference of sets.
+We wan to estimate $P[X_{n+1} \in C^* \Delta \hat C_n]$ (essentially this is a conditional random variable, i.e. $P(\ldots | X_1, \ldots, X_n)$).
+
+\begin{definition} \
+
+\begin{itemize}
+  \item $L_P(C,C^*) = P[X_{n+1} \in C \Delta C^*]$.
+        If $L_P(\hat C_n, C^*) \to 0$ then $\A$ is good.
+  \item $r_\A(n,\epsilon,P) = \sup\limits_{C \in \C} P(Z^n \in \Z^n\ |\ L_P(A_n(z^n), C) \geq \epsilon)$.
+  \item $R_\A(n,\epsilon,\Pcal) = \sup\limits_{P \in \P} r_\A(n,\epsilon,P)$.
+\end{itemize}
+\end{definition}
+If $P$ is fixed then  $r_\A$ is a worst-case size of bad samples.
+We consider supremum over all $C$ since we don't know $C^*$.
+
+\begin{definition} \
+
+\begin{itemize}
+  \item $\A$ is PAC if $\lim\limits_{n \to \infty} R_\A(n,\epsilon,\P) = 0$.
+  \item $\C$ is PAC-learnable if $\exists \A$~-- is PAC.
+\end{itemize}
+\end{definition}
+Goals
+\begin{itemize}
+  \item Determine conditions for $C$ to be PAC-learnable.
+  \item Find PAC $\A$, determine sample complexity as function of $C$.
+\end{itemize}
+Equivalent definition of PAC:
+\[\forall \epsilon,\delta>0\ \exists n_0(\epsilon, \delta)\ \forall n > n_0(\epsilon, \delta), C \in \C, P \in \Pcal
+  \ \ \ P(D_n | L_P(A_n(D_n) \in C) \geq \epsilon) \leq \delta.\]
+$\C = \set{X \in [0;1]: \sin(\Theta X) > 0, \Theta \in \R}$
+
+\section{Function learning}
+\begin{itemize}
+  \item The same setup. $\Fun$~-- class of functions.
+  \item $Y \in f^*(X) \in [0;1]$.
+  \item $\hat f_n = A_n(D_n)$.
+  \item $L_P(f,f^*) = \Expect{|f(X) - f^*(X)|_2^2} = \int\limits_\X |f(x) - f^*(x)|^2 P(dx) = ||f - f^*||^2_{L_2(P)}$.
+\end{itemize}
+
+For example, $L_P(C,C^*) = ||I_C - I_{C^*}||^2_{L_2(P)}$.
+
+\begin{example}
+  Take $\X = [0;1]^2$, $\P$~-- all distributions on $\X$, $C$~-- set of all possible rectangles.
+  \[C = \set{[a_1; b_1] \times [a_2; b_2]\ |\ 0 \leq a_1 \leq b_1 \leq 1,\ 0 \leq a_2 \leq b_2 \leq 1}.\]
+  To prove learnability need $\A$.
+  \begin{itemize}
+    \item $Z_i = (X_i, I(X_i \in C^*))$.
+    \item $\hat C_n = A_n(D_n)$~-- smallest $C \in \C$.
+  \end{itemize}
+\end{example}
+
+\begin{theorem}
+  \[R_\A(n,\epsilon,\Pcal) \leq 4 \left(1 - \frac \epsilon 4\right)^n\]
+\end{theorem}
+\begin{proof}
+  Since we select the smallest rectangle $\hat C^n \in C^* \implies \hat C^n \Delta C^* = C^* \setminus \hat C^n$.
+  If $P(C^*) < \epsilon$ then $P[C^* \setminus \hat C^n] \leq P[C^*] \leq \epsilon$.
+
+  Consider the case when $P(C^*) \geq \epsilon$. Then $C^* \setminus \hat C^n = V_1 \cup V_2 \cup H_1 \cup H_2$,
+    where $V_1$ is a strip between the left boundaries of the rectangles, with height bounded by largest rectangle, namely
+    $V_1 = [a_1^*, \hat a_1] \times [a_2^*, b_2^*]$.
+    $V_2$, $H_1$ and $H_2$ are similar strips corresponding to other boundaries (all derivations also will be the same).
+    If $P$ of each of these strips is less then $\frac \epsilon 4$ then by union bound $P[V_1 \cup V_2 \cup H_1 \cup H_2] < \epsilon$.
+
+  Consider probability that $V_1 \geq \frac \epsilon 4$. The probability that one sample is not in $V_1$ is at most $1 - \frac \epsilon 4$.
+  Therefore the probability that all $n$ samples are not in $V_1$ is at most $\left(1 - \frac \epsilon 4\right)^n$.
+  By union bound probability that there exist a strip with no sample with it and $P \geq \frac \epsilon 4$ is at most $4 \left(1 - \frac \epsilon 4\right)^n$.
+\end{proof}
+Corollary: \[n_0(\epsilon, \delta) \geq \frac {4 \log \frac 4 \delta} \epsilon.\]
+\end{document}
