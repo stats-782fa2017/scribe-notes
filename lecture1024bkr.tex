@@ -1,0 +1,272 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+% Ben's macros:
+\renewcommand{\O}{\ensuremath{\mathcal{O}}}
+\newcommand{\st}{\ensuremath{\;\mathrm{s.}\;\mathrm{t.}\;}}
+\newcommand{\wrt}{\ensuremath{\;\mathrm{w.}\;\mathrm{r.}\;\mathrm{t.}\;}}
+\newcommand{\then}{\ensuremath{\;\Rightarrow\;}}
+
+
+% To be entered
+\setcounter{lecnum}{9}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Ben Rosenzweig}
+\newcommand{\chtitle}{Finite Class Lemma and VC Dimension}
+\newcommand{\lecdate}{24 October 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+\section{Finite Class Lemma}
+Last time: control
+\rad_n(\F) \then control R(\fhat)
+
+\item concentration of \Delta_n
+\item \E
+
+  Today, other ways of bounding rad comp
+
+  \begin{lemma}[finite class (v1)]
+    If $\mathcal{A}=\{a^{(1)},...,a^{(N)}\}\subset\R^n$ is a finite set with $||a^{(i)}||\leq L \forall i$ and $N\geq2$, then
+    \[
+    \rad_n(\mathcal{A})\leq \frac{4L\sqrt{\log{N}}}{n}
+   \]
+  \end{lemma}
+  \begin{proof}
+    By some tricks for sub-Gaussian rvs as in ex last wk,
+    Y_j = 2/n \sum_i=1^n \sigma_ia_i^{(j)}
+    \E{e^{tY_j}}\leq \exp{2L^2t^2/n^2}
+    and 
+    \E{e^{-tY_j}}\leq \exp{2L^2t^2/n^2},
+    so \E{\max_j|Y_j|}=\E{\max{Y_1,-Y_1,...,Y_N,-Y_N}}
+    \leq 2L\sqrt{log2N}/n  (here N\geq2, 2N\leq N^2)
+    \leq 4L\sqrt{\log N}/n
+
+    Implication: w.p. >1-\delta
+    R_n(a^{(j)}\leq \Rhat_n(a^{(j)}+8L\sqrt{\log N}/n+\sqrt{\frac{\log 1/\delta}{n}}
+  \end{proof}
+
+  V2 doesnt use rad comp
+\begin{lemma}[finite class (v2)]
+  P(\sup_j|\rhat_n(a^{(j)}) - R_n(a^{(j)})|\geq\epsilon)
+  \leq \sum_j=1^N P(|\rhat_n(a^{(j)})-R_n(a^{(j)})|\geq\epsilon)
+  \leq 2Ne^{-n\epsilon^2/(2L)^2}
+  w.p. >1-\delta,
+  R_n(a^{(j)})\leq \rhat_n(a^{(j)})+2L\sqrt{\frac{2\log N + \log 1/\delta}{n}}
+  
+  \end{lemma}
+
+how can we extend this to infinite classes
+recall \F is projected onto data z^n:
+\F(z^n) = \{f(z_1),...,f(z_n):f\in\F\}
+this is the set whose size we want to find.
+Supp
+f \mapsto \{0,1\}\fofrall f\in\F.
+
+then \F(z^n)\subseteq\{0,1\}^n
+
+thus, \forall f\in\F, \sqrt{\sum_i=1^n|f(z_i)|^2}\leq\sqrt{n}
+
+So if z^n is fied,
+N:=|\F(z^n)|\leq 2^n (vertex on binary hypercube)
+L\leq\sqrt{n}
+
+so \radhat_n(\F(z^n))\leq4\sqrt{\log|\F(z^n)/n}
+
+how can we get a tighter bound?
+
+\section{VC-dimension}
+\begin{definition}[Shattering]
+  Let \mathcal{C} be a class of subsets of Z.  We say that S=\{z_1,...,z_n\}\subset\Z (finite) 
+  is \textit{shattered} by \C if \forall S'\subseteq S
+  \exists C\in \C\st S'=S\cap C,
+  we say C ``picks out'' S'.
+An equivalent definition
+\iff
+S is shattered by \C if \forall b\in \{0,1}^n\exists C\in \C\st (I(z_1\in C),...,I(z_n\in C))=b
+\iff \{(I(z_1\in C),...,I(z_n\in C)):C\in\C\} = \{0,1}^n
+  \end{definition}
+  
+  example class \C
+  \C=\{(-\infty,t]:t\in\R\} half-open
+  \C=\{(a,b):a\leq b} open
+  \C=\{(a,b)\cup(c,d):a\leq b\leq c\leq d} unions
+\C= all discs in \R^d
+= all axis parallel rectangles in \R^d
+= \{x:\beta^Tx\geq0\} (half spaces)
+=all convex sets
+
+\begin{example}
+\C=\{(a,b):a\leq b}, S=\{1,2,3\}
+which S'\subset S can \C pick out?
+all S'\in\pow(S) EXCEPT \{1,3\}.  So S is not shattered by \C.
+\end{example}
+
+\begin{example}
+\C can shatter any set of size two:
+\C=\{(a,b):a\leq b}, S=\{s,t\} s\neq t,
+but only trivial sets of size 3.
+\end{example}    
+  
+\begin{definition}[Vapnik-Chervonenkis (VC) dimension of \C]
+V(\C) = \max{n\in\N:\exists S\subset\Z\st |S|=n and S is shattered by \C}
+\end{definition}
+
+(hard part is proving that no set of size > n can be shattered!)
+
+If V(\C)<\infty we say \C is a VC-class
+
+\bdef[the n^th shatter coefficient]
+\mathcal{S}_n\C:=\sup_{S\subset\Z,|S|=n}|\{S\cap C:C\in\C\}|
+\edef
+
+For \C=\{(a,b):a\leq b},
+\S_2(\C)=4
+\S_3(\C)=7
+
+another def V(\C) = \max{n\in\N:\S_n(\C)=2^n}
+
+VC is well-def'd: If \S_n<2^n, then \S_m<2^m\forall m>n
+
+VC-dim for binary functions:
+\forall f:\Z\to\{0,1\},  let C_f=\{z:f(z)=1\}
+\forall C\subseteq\Z, let f_C(x)=I(x\in C)
+
+\begin{definition}
+Let \F be a class of f:\Z\to\{0,1\}.  We say S is shattered by \F if S is shattered by C_\F = \{I(f=1):f\in\F\}
+
+where I(f=1) is the indicator of C_f
+\S_n(\F) =\S_n(\C_\F)
+V(\F)=V(\C_\F)
+\edef
+
+\begin{example}
+\C = \{(-\infty,t):t\in\R\}
+V(\C) = 1
+1. shatter some 1-pt set.  S=\{0\}
+(-\infty,-1]\cap S = \emptyset
+(-\infty,-1]\cap S = S
+so we know V(\C)\geq 1
+to show there is no 2-pt set,
+let S=\{a,b\}, a<b.
+Obviously, \not\exists t\st(-\infty,t]=\{b\}.
+\end{example}
+
+1. S=\{s,t\} s<t.  choose a_1<a_2<s<a_3<t<a_4
+(a_1,a_2)\cap S=\emptyset
+(a_2,a_3)\cap S=\{s\}
+(a_1,a_4)\cap S=\{t\}
+2. S=\{s,t,u\} (s<t<u)
+\{s,u\}\subset(a_1,a_2)\then \{t\}\subset(a_1,a_2)
+
+algorithmic stability, bound on rad comp (which you can't use directly for real-valued case unless loss is bdd)
+
+params of k-SVM infinite, but # support vecs finite = VC-dim 
+
+\end{document}
