@@ -1,0 +1,166 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsfonts, amsmath,amsthm,amssymb}
+\usepackage{mathrsfs}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+% Ben's macros:
+\renewcommand{\O}{\ensuremath{\mathcal{O}}}
+\newcommand{\st}{\ensuremath{\;\mathrm{s.}\;\mathrm{t.}\;}}
+\newcommand{\wrt}{\ensuremath{\;\mathrm{w.}\;\mathrm{r.}\;\mathrm{t.}\;}}
+\newcommand{\then}{\ensuremath{\;\Rightarrow\;}}
+
+
+% To be entered
+\setcounter{lecnum}{15}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Inhak Hwang}
+\newcommand{\chtitle}{Concentration III}
+\newcommand{\lecdate}{5 October 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+\section{Martingales}
+Let $(\Omega, \mathscr{F})$. Define sequence $\mathscr{F}_{i}$ of $\sigma$-algebras s.t. $\mathscr{F}_{i} \subset \mathscr{F}_{i+1}$ and $\mathscr{F}_{0} = \sigma\{ \Omega\}$. We call $((\mathscr{F}_{i}, (X_{i}))$ a martingale w.r.t $(\mathscr{F}_{i})$ if $X_{i}$ is $\mathscr{F}_{i}$ measurable and $E[X_{i} | \mathscr{F}_{i-1}] = X_{i-1}$ where $\mathscr{F}_{i} = \sigma(X_{1},X_{2}...X_{i})$. Note the following 
+\begin{itemize}
+\item $ E[X_{i}] = \mu $
+\item If $E[X_{i}|\mathscr{F}_{i-1}] = 0$ call it a martingale difference.
+\end{itemize}
+
+\begin{example}
+$Y_{0} = E[X_{0}], Y_{1} = X_{i} - X_{i-1}$
+\end{example}
+\begin{example}
+$\exists X$ s.t. can create $\mathscr{F}_{i} \subset \sigma[X]$, $X_{i} = E[X | \mathscr{F}_{i}$.
+\end{example}
+
+\section{Azuma's inequality}
+Let $((\mathscr{F}_{i}), (y_{i}))$ be a martingale difference s.t. for $(a_{i})$ and $(b_{i})$ , $P(Y_{i} \in [a_{i}, b_{i}) = 1 $ for all $i$. Then for $\delta > 0$, 
+\begin{align*}
+P(\frac{1}{n}|\sum Y_{i}| \le \delta) \le 2\exp^{-\frac{n\delta^{2}}{\frac{1}{n}\sum\limits_{i=1}^{n}(b_{i}-a_{i})^{2}  }}
+\end{align*}
+Pf: sketch \par
+$Ee^{\lambda \sum\limits_{i=1}^{n}Y_{i}} = E[E[e^{\lambda\sum\limits_{i=1}^{n}Y_{i}}|\mathscr{F}_{n-1}]] $
+= $ E[e^{\lambda \sum\limits_{i=1}^{n}} Y_{i}E[e^{ \lambda Y_{n} } | \mathscr{F}_{n-1}] $ \\
+\par
+Let $Z = f(X_{1},...X_{n})$.
+\begin{theorem}[McDiamird's]
+If $f$ satisfies ``bounded differences" : \\
+\begin{align*}
+\sup\limits_{x_{1},x_{2}...x_{n},x'\in X^{n+1}}|f(x_{1},...,x_{n}) - f(x_{2},..., x_{i-1},x, x_{i+1},...,x_{n})| < C_{i}
+\end{align*}
+Then $\delta > 0$, $P(X - E[Z] > \delta) \le \exp^{-\frac{2\delta}{\sum c_{i}^{2}}}$
+\end{theorem}
+Pf : sketch \\
+$Y_{0} = E[Z]$, $Y_{1} = E[Z|X_{1}...X_{i}] = E[Z|X_{1}...X_{i-1}]$.
+\bibliographystyle{scribebibsty}
+\bibliography{s782references}
+
+\end{document}
