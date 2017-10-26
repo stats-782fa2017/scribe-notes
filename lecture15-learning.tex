@@ -208,8 +208,31 @@ The loss of some hypothesis $c'$ for any c can be written as
     \int_X \lvert 1-I(x \in c') \rvert^2 \quad p_x(dx \times \{1\})\\
     &= \int_X I(x \in c')  \quad p_x(dx \times \{0\}) +
     \int_X I(x \in (c')^\complement)  \quad p_x(dx \times \{1\})\\
-    &= p_{x,c}(c' \times \{0\}) + p_{x,c}( (c')^\complement \times \{1\})
+    &= p_{x,c}(c' \times \{0\}) + p_{x,c}( (c')^\complement \times \{1\})\\
+    &= (1-eta) p_x(c') + (1-2\eta)p_x(c' \cap c) + \eta p_x((c')^\complement) + (1-2\eta)p_x((c')^\complement \cap c)\\
+    &= \ldots = \ldots = \ldots \\
+    &= \eta + (1-2\eta) L_{p_x}(c',c)\\
+    &\text{The loss can be approximated using}\quad p_{x,c}(c \Delta c')
 \end{align*}
+
+The best hypothesis can then be given by
+
+\begin{align*}
+    L_{p\times c}^*(c) &= \inf\limits_{c' \in c} L_{p\times c}(c')\\
+    &= \eta + (1-2\eta) \inf\limits_{c' \in c} p_{x,c}(c \Delta c')\\
+    &= \eta \quad \text{if (c'=c)}
+\end{align*}
+
+Thus, an infimum is achieved at $c'=C$.
+
+\begin{align*}
+    L_{p\times c}(c') \geq L_{p\times c}^* + \epsilon\\
+    p_{x,c}(c \Delta c') \geq \frac{\epsilon}{1-2\eta}
+\end{align*}
+
+A noisy classification to some accuracy $\epsilon$ is like noise free classification to accuracy $\frac{\epsilon}{1-2\eta}$. Since $(1-2\eta)$ is very small so the bound is larger. 
+
+Noisy classification is more difficult than noiseless classification.
 
 \bibliographystyle{scribebibsty}
 \bibliography{s782references}
