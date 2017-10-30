@@ -131,17 +131,17 @@
 Suppose $X_{1}...X_{n}$ are i.i.d p on $[0,1]^{d}$. Divide the unit cube into $B_{1},...,B_{n}$ cubes each with side length h, $N \le (\frac{1}{h})^{d}$. 
 Define 
 \begin{align*}
-&\hat{p}_{h}(x) = \sum\limits_{j}\frac{\hat{\theta}_{j}}{h^{d}}I(x \in B_{j}) \text{\hspace{0.5cm}  where  \hspace{0.5cm}} \hat{\theta}_{j} = \frac{1}{n}\sum\limits_{i=1}^{n}I(x_{i} \in B_{j})
+&\hat{p}_{h}(x) = \sum\limits_{j}\frac{\hat{\theta}_{j}}{h^{d}}I(x \in B_{j}) \text{\hspace{0.5cm}  where  \hspace{0.5cm}} \hat{\theta}_{j} = \frac{1}{n}\sum_{i=1}^{n}I(x_{i} \in B_{j})
 \end{align*}
 We want to bound
 \begin{align*}
-P(\|\hat{p}_{h} - p \|_{\infty} > \epsilon ) 
+\P\left(\| \hat{p}_{h} - p \|_{\infty} > \epsilon \right) 
 \end{align*}
 Consider :
 \begin{align*}
-&P(\max\limits_{j}|\frac{\hat{\theta}_{j}}{h^{d}} - \frac{\theta_{j}}{h^{d}}| > \epsilon) \\
- & (\theta_{j} = \int_{B_{j}}p(x)dx ) \\
-&= P(\max\limits_{j}|\hat{\theta_{j}} - \theta_{j}| > \epsilon h^{d}) \\
+&\P\left(\max\limits_{j}\left|\frac{\hat{\theta}_{j}}{h^{d}} - \frac{\theta_{j}}{h^{d}}\right| > \epsilon\right) 
+ & \left(\theta_{j} = \int_{B_{j}}p(x)dx \right) \\
+&= \P\left(\max\limits_{j}\left|\hat{\theta}_{j} - \theta_{j}\right| > \epsilon h^{d}\right) 
 \end{align*}
 assume $|p(x) - p(y) | \le L\|x - y\|$ then $p$ is bounded. 
 It follows that
@@ -151,13 +151,13 @@ It follows that
 \end{align*}
 Now
 \begin{align*}
-P(|\hat{\theta_{j}} - \theta_{j}| > h^{d}\epsilon) &\le 2\exp(-\frac{1}{2}\frac{n\epsilon^{2}h^{2d}}{\theta_{j}(1-\theta_{j}) + \epsilon h^{d} / 3}) \\
-&\le 2exp(-\frac{1}{2}\frac{n\epsilon^{2}h^{2d}}{ch^{d}+ \epsilon h^{d} /3}) \\
-&\le 2exp(-c n \epsilon^{2} h^{d}) \\
-& (c = \frac{1}{2(c+\frac{1}{3})}) \\
+\P\left(\left|\hat{\theta}_{j} - \theta_{j}\right| > h^{d}\epsilon\right) &\le 2\exp\left(-\frac{1}{2}\frac{n\epsilon^{2}h^{2d}}{\theta_{j}(1-\theta_{j}) + \epsilon h^{d} / 3}\right) \\
+&\le 2\exp\left(-\frac{1}{2}\frac{n\epsilon^{2}h^{2d}}{ch^{d}+ \epsilon h^{d} /3}\right) \\
+&\le 2\exp\left(-c n \epsilon^{2} h^{d}\right) 
+& \left(c \rightarrow \frac{1}{2(c+1/3)}\right) \\
 \end{align*}
 \begin{align*}
-P(\max\limits_{j}|\hat{\theta}_{j} - \theta_{j}| > h^{d}\epsilon) \le 2 h^{-d}exp(-cn\epsilon^{2}h^{d}) = \Pi_{n}
+\P\left(\max\limits_{j}|\hat{\theta}_{j} - \theta_{j}| > h^{d}\epsilon\right) \le 2 h^{-d}\exp\left(-cn\epsilon^{2}h^{d}\right) =: \Pi_{n}
 \end{align*}
 Now 
 \begin{align*}
@@ -168,22 +168,21 @@ p(x) - p_{n}(x) = p(x) - \frac{\int_{B_{j}}p(u)du } {h^{d}} \\
 \end{align*}
 wp $1- \Pi_{n}$
 \begin{align*}
-\|\hat{p}_{h} - p \|_{\infty} \le \|\hat{p}_{h} - p_{h}\|_{\infty} + \| p_{h} - p \|_{\infty}\\ \le \epsilon + L\Pi h \\
-\epsilon = \sqrt{ \frac{1}{cnh^{d}}\log(\frac{2}{\delta h^{d}})} \\
-\delta = \Pi n
+\|\hat{p}_{h} - p \|_{\infty} \le \|\hat{p}_{h} - p_{h}\|_{\infty} + \| p_{h} - p \|_{\infty}\\ \le \epsilon + L\sqrt{d} h.
 \end{align*}
-wp $1- \delta$,
+Therefore, wp at least $1- \delta$,
 \begin{align*}
-\|\hat{p}_{h} - p\|_{\infty} \le \sqrt{\frac{1}{cnh^{d}}\log(\frac{2}{\delta h^{d}})} + L\sqrt{d} h \\
-h = (\frac{c}{n})^{\frac{1}{2+d}}
+\|\hat{p}_{h} - p\|_{\infty} \le \sqrt{\frac{1}{cnh^{d}}\log\left(\frac{2}{\delta h^{d}}\right)} + L\sqrt{d} h.
 \end{align*}
-wp $1 - \Pi_{n}$.
+Choosing $h = (\frac{c}{n})^{\frac{1}{2+d}}$
+gives that,
+wp at least $1 - \delta$,
 \begin{align*}
-\|\hat{p}_{h} - p \|_{\infty} = O([\frac{log n}{n}]^{\frac{1}{2+d}})
+\|\hat{p}_{h} - p \|_{\infty} = O\left(\left[\frac{\log n}{n}\right]^{\frac{1}{2+d}}\right)
 \end{align*}
 
 \section{Martingales}
-Let $(\Omega, \mathscr{F})$. Define sequence $\mathscr{F}_{i}$ of $\sigma$-algebras s.t. $\mathscr{F}_{i} \subset \mathscr{F}_{i+1}$ and $\mathscr{F}_{0} = \sigma\{ \Omega\}$. We call $((\mathscr{F}_{i}, (X_{i}))$ a martingale w.r.t $(\mathscr{F}_{i})$ if $X_{i}$ is $\mathscr{F}_{i}$ measurable and $E[X_{i} | \mathscr{F}_{i-1}] = X_{i-1}$ where $\mathscr{F}_{i} = \sigma(X_{1},X_{2}...X_{i})$. Note the following 
+Let $(\Omega, \mathscr{F})$. Define sequence $\mathscr{F}_{i}$ of $\sigma$-algebras s.t. $\mathscr{F}_{i} \subset \mathscr{F}_{i+1}$ and $\mathscr{F}_{0} = \sigma\{ \Omega\}$. We call $((\mathscr{F}_{i}, (X_{i}))$ a martingale w.r.t $(\mathscr{F}_{i})$ if $X_{i}$ is $\mathscr{F}_{i}$ measurable and $E[X_{i} | \mathscr{F}_{i-1}] = X_{i-1}$ where $\mathscr{F}_{i} = \sigma(X_{1},X_{2},...,X_{i})$. Note the following 
 \begin{itemize}
 \item $ E[X_{i}] = \mu $
 \item If $E[X_{i}|\mathscr{F}_{i-1}] = 0$ call it a martingale difference.
@@ -199,22 +198,25 @@ $\exists X$ s.t. can create $\mathscr{F}_{i} \subset \sigma[X]$, $X_{i} = E[X | 
 \section{Azuma's inequality}
 Let $((\mathscr{F}_{i}), (y_{i}))$ be a martingale difference s.t. for $(a_{i})$ and $(b_{i})$ , $P(Y_{i} \in [a_{i}, b_{i}]) = 1 $ for all $i$. Then for $\delta > 0$, 
 \begin{align*}
-P(\frac{1}{n}|\sum Y_{i}| \ge \delta) \le 2\exp^{-\frac{n\delta^{2}}{\sum\limits_{i=1}^{n}(b_{i}-a_{i})^{2}  }}
+\P\left(\frac{1}{n}\left|\sum Y_{i}\right| \ge \delta\right) \le 2\exp\left\{-\frac{n\delta^{2}}{\sum_{i=1}^{n}(b_{i}-a_{i})^{2}  }\right\}
 \end{align*}
-Pf: sketch \par
-$Ee^{\lambda \sum\limits_{i=1}^{n}Y_{i}} = E[E[e^{\lambda\sum\limits_{i=1}^{n}Y_{i}}|\mathscr{F}_{n-1}]] $
-= $ E[e^{\lambda \sum\limits_{i=1}^{n}} Y_{i}E[e^{ \lambda Y_{n} } | \mathscr{F}_{n-1}] $ \\
-\par
-Let $Z = f(X_{1},...X_{n})$.
+\begin{proof} (sketch) \par
+$E\left[e^{\lambda \sum_{i=1}^{n}Y_{i}}\right] = E\left[E\left[e^{\lambda\sum_{i=1}^{n}Y_{i}}\given\mathscr{F}_{n-1}\right]\right] $
+= $ E\left[e^{\lambda \sum_{i=1}^{n-1} Y_{i}} E\left[e^{ \lambda Y_{n} } \given \mathscr{F}_{n-1}\right]\right] $ 
+\end{proof}
+
+
 \begin{theorem}[McDiamird's]
-If $f$ satisfies ``bounded differences" : \\
+Let $Z = f(X_{1},...X_{n})$. If $f$ satisfies ``bounded differences" : \\
 \begin{align*}
-\sup\limits_{x_{1},x_{2}...x_{n},x'\in X^{n+1}}|f(x_{1},...,x_{n}) - f(x_{2},..., x_{i-1},x, x_{i+1},...,x_{n})| < C_{i}
+\sup\limits_{x_{1},x_{2}...x_{n},x'\in X^{n+1}}|f(x_{1},...,x_{n}) - f(x_{2},..., x_{i-1},x', x_{i+1},...,x_{n})| < c_{i}
 \end{align*}
-Then $\delta > 0$, $P(Z - E[Z] > \delta) \le \exp^{-\frac{2\delta}{\sum c_{i}^{2}}}$
+Then $\delta > 0$, $P(Z - E[Z] > \delta) \le \exp\left(-\frac{2\delta}{\sum c_{i}^{2}}\right)$
 \end{theorem}
-Pf : sketch \\
-$Y_{0} = E[Z]$, $Y_{1} = E[Z|X_{1}...X_{i}] = E[Z|X_{1}...X_{i-1}]$.
+\begin{proof} (sketch) \\
+Take
+$Y_{0} = E[Z]$, $Y_{1} = E[Z|X_{1}...X_{i}] = E[Z|X_{1}...X_{i-1}]$ and use Azuma.
+\end{proof}
 \bibliographystyle{scribebibsty}
 \bibliography{s782references}
 
