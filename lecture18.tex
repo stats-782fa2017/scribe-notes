@@ -228,13 +228,13 @@ but only trivial sets of size 3.
   If $V(\C)<\infty$ we say \C is a \textbf{VC-class}.
  \end{definition}
 
-VC is well-defined: $\S_n<2^n \then \S_m<2^m\,\forall m>n$.
 The hard part is always proving that no set of size $> n$ can be shattered.
 
 \begin{definition}[the $n^{th}$ shatter coefficient]
-$\mathcal{S}_n\C:=\sup_{S\subset\Z,|S|=n}|\{S\cap C:C\in\C\}|$
+$\mathcal{S}_n(\C):=\sup_{S\subset\Z,|S|=n}|\{S\cap C:C\in\C\}|$
 \end{definition}
 The shattering coefficient gives us another way to define VC-dimension: $V(\C) := \max\{n\in\N:\S_n(\C)=2^n\}$.
+VC is always well-defined, since $\S_n<2^n \then \S_m<2^m\,\forall m>n$.
 
 \begin{example}
   For $\C=\{(a,b):a\leq b\},\,\S_2(\C)=4,\,\S_3(\C)=7$.
