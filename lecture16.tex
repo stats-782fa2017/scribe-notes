@@ -1,0 +1,319 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\U}{\mathcal{U}}
+\newcommand{\Radn}{\hat{\mathfrak R}_n}
+\newcommand{\Rad}{\mathfrak R_n}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+
+
+% Your new macros
+
+
+
+% To be entered
+\setcounter{lecnum}{16}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Yisu Peng}
+\newcommand{\chtitle}{Empirical Risk Minimization (ERM algorithm)}
+\newcommand{\lecdate}{17 October 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+\section{Empirical risk}
+First, we introduce some notations,
+\begin{itemize}
+\item Data point $(x, y) \sim P \in \mathcal{P}$, \\
+where $P$ is the joint distribution and $\mathcal{P}$ is the space of distributions.
+\item Loss function $\ell : \mathcal Y \times \mathcal U \rightarrow [0, 1]$,\\
+$\Y$ is the space of true labels and $\U$ is the space of predicted labels
+\item Hypothesis space $\mathcal{F} : \mathcal{X} \rightarrow \mathcal{U}$
+\item Data $Z^n = (Z_1, ... , Z_N) \overset{iid}\sim P$
+\end{itemize}
+
+\begin{definition}
+some function $f \in \mathcal{F}$, the empirical risk is
+\begin{align}
+\hat{R}_n(f) = \frac{1}{n} \sum_{i=1}^{n} \Expect{\ell(y_i, f(x_i))}
+\end{align}
+\end{definition}
+
+Now we have,
+\begin{align*}
+\Expect{\hat{R}_n(f)} &= \frac{1}{n} \sum_{i=1}{n} \Expect{\ell (y_i, f(x_i))}\\
+	&= \Expect{\ell(y_i, f(x_i))}\\
+	&= R(f)
+\end{align*}
+
+So based on the Hoeffding inequality,
+\begin{align*}
+&P(|\hat{R}_n(f) - R(f)| > \epsilon) \le 2 e^{-2n\epsilon^2}
+\end{align*}
+
+$\implies$ w.p. $1-2e^{-2n\epsilon^2}$
+\begin{align*}
+&|\hat{R}_n(f) - R(f)| < \epsilon
+\end{align*}
+
+We could find $\hat R_n (f)$ for any $f \in \mathcal{F}$, then why not $\hat f_n = \argmin_{f\in \mathcal F} \hat R_n (f)$
+
+Here is how the logic goes: $f^* := \argmin_{f\in \mathcal F} R(f)$, and\\
+\begin{align*}
+R(\hat f_n) \approx \hat R_n(\hat f_n) \approx
+\hat R_n(f^*) \approx R(f^*)
+\end{align*}
+However, thid doesn't work. We need conditions on $\mathcal{P}, \mathcal{F}, \ell$. First we intoduce the "induced loss class",
+\begin{align*}
+\mathcal{L}(\mathcal{F})=\{\ell(\cdot, f(\cdot)) : f \in \mathcal{F}\}
+\end{align*}
+and
+\begin{align*}
+q(n, \epsilon) := \sup_{P \in \mathcal{P}} P^n ( Z^n \in \mathbb{Z}^n: \sup_{f\in\mathcal{F}}|\hat R_n(f) - R(f)| \ge \epsilon)
+\end{align*}
+This is corresponding to the worst case probability distribution over all $\mathcal{P}$ of "bad" samples (those with worst/large risk diviation over $\mathcal{F}$).
+
+We say $\mathcal{L}(\mathcal{F})$ has "uniform convergence of empirical means" (UCEM) property w.r.t. $\mathcal{P}$, if
+\begin{align*}
+\lim_{n\rightarrow\infty} q(n,\epsilon) = 0 \qquad \forall \epsilon > 0
+\end{align*}
+
+\begin{theorem}
+if $\mathcal{L}(\mathcal{F})$ has UCEM property the ERM is PAC.
+\end{theorem}
+
+\begin{proof}
+\begin{align*}
+R(\hat f_n) - R(f^*) &= R(\hat f_n) - \hat R_n(\hat f_n) + \hat R_n(\hat f_n) - \hat R_n(f^*) + \hat R_n(f^*) - R(f^*)\\
+\hat R_n(\hat f_n) - \hat R_n(f^*) &\le 0 \quad \text{by ERM}\\
+R(\hat f_n) - \hat R_n(\hat f_n) &\le \sup_f ( R(f) - R_n(f)) \le \sup_f | R(f) - \hat R_n(f) |\\
+\hat R_n(f^*) - R(f^*) &\le \sup_f ( R(f) - R_n(f)) \le \sup_f | R(f) - \hat R_n(f) |
+\end{align*}
+So, 
+\begin{align*}
+R(\hat f) - R(f^*) \le 2 \sup_f | R(f) - \hat R_n (f) |
+\end{align*}
+then with the UCEM property we have, $\exists n_0 (\epsilon, \delta)$ s.t.
+\begin{align*}
+q(n, \epsilon / 2) &\le \delta \qquad \forall n > n_0
+\end{align*}
+\end{proof}
+
+\section{ERM algorithm}
+
+Now, let's consider an algorithm,
+\begin{align*}
+r_{\mathcal{A}}(n,\epsilon) &= \sup_{P \in \mathcal{P}} P^n (Z^n: R(\hat f) \ge R(f^*) + \epsilon)\\
+&\le \sup_{P \in \mathcal{P}} P^n(Z^n : \sup_{f\in\mathcal{F}} | \hat R_n(\hat f) - R(f) | \ge \epsilon / 2)\\
+&= q(n, \epsilon / 2) \le \delta
+\end{align*}
+
+UCEM is sufficient for the ERM algorithm to ``work''. Then our question is, when do we have UCEM? It turns out $\Expect{\sup_{f\in\mathcal{F}} | R(f) - \hat R_n(f) |} = o(1)$ is sufficient for UCEM when $\ell : \Y \times \U \rightarrow [0, M]$.
+
+Further more, we define
+\begin{align*}
+\Delta_n = \sup_f | R(f) - \hat R_n(f) |
+\end{align*}
+Then we have the following with McDiarmid's inequality,
+\begin{align*}
+P^n(\Delta_n - E \Delta_n \ge t) \le e^{-2nt^2} \qquad \forall \ell \rightarrow [0,1]
+\end{align*}
+
+What we want is $P^n(\Delta_n \ge \epsilon) \rightarrow 0$
+\begin{align*}
+P^n(\Delta_n \ge \epsilon) &= P^n(\Delta_n - E \Delta_n \ge \epsilon - E \Delta_n)\\
+\exists n &\text{s.t.} E \Delta_n < \epsilon/2\\
+	&\le P^n(\Delta_n - E \Delta_n \ge \epsilon / 2) \le e^{-n\epsilon^2/2}\\
+	&\le f \qquad \text{with n large enough}
+\end{align*}
+When is $E\Delta_n$ is small?
+
+\section{Rademacher complexity}
+\begin{theorem}
+ERM satisfies
+\begin{itemize}
+\item $R(\hat f_n) \le R(f^*) + 2 \Delta_n(\F)$,
+\item $R(\hat f_n) \le \hat R_n(\hat f_n) + \Delta_n(\F)$.
+\item $\Delta_n = \sup_{f\in\mathcal{F}} | R(f) - \hat R_n(f) |$
+\end{itemize}
+\end{theorem}
+
+We need to control $\Delta_n$,
+
+\begin{definition}
+\begin{align}
+\Radn (\F) = \mathbb{E}_\sigma\left[\left. \sup_{f\in\mathcal{F}} | \frac{2}{n} \sum_{i=1}{n} \sigma_i f(Z_i)| \right| Z^n\right]
+\end{align}
+$\sigma_i$'s are Rademacher variables, $P(\sigma_i = 1) = P(\sigma_i = -1) = \frac{1}{2}$
+\end{definition}
+
+\begin{itemize}
+\item Think of this as ``projection" of $\F$ on to $Z^n$
+\item ``Correlation" of $\F$ with noise
+\item $\sup_f|f| \le M$ or this doesn't work
+\item ``empirical Rademacher complexity"
+\end{itemize}
+
+\begin{definition}
+Expected Rademacher complexity
+\begin{align*}
+\Rad(\F) = \mathbb{E}_{P^n} \left[ \Radn (\F) \right]
+\end{align*}
+\end{definition}
+
+\begin{theorem}
+\begin{align*}
+\Expect{\Delta_n(\F)} \le \Rad (\F)
+\end{align*}
+\end{theorem}
+
+\begin{proof}
+(by symmetrization) First we need $Z^n$ and ``ghost" samples $\tilde{Z}^n$
+\begin{align*}
+\Delta_n(\F) &= \sup_{f\in\mathcal{F}} | R(f) - \hat R_n(f) |\\
+	&= \sup_{f\in\mathcal{F}} \tilde{\mathbb{E}} \left[ | \tilde{\hat R}_n(f) - \hat R_n (f) | \right]\\
+	&\le \tilde E \left[ \sup_{f\in\mathcal{F}} | \tilde{\hat R}_n (f) - \hat R_n (f) | \right]
+\end{align*}
+So,
+\begin{align*}
+\mathbb{E}_{Z^n} \Delta_n(\F) &= \mathbb{E}_{Z^n} \mathbb{E}_{\tilde Z^n} \left[ \sup_{f\in\mathcal{F}} | \tilde{\hat R}_n(f) - \hat R_n(f) | \right]
+\end{align*}
+
+Because $Z^n$ and $\tilde Z^n$ are independent, with the symmetrization
+\begin{align*}
+\tilde{\hat R}_n(f) - \hat R_n(f) &= \frac{1}{n} \sum_{i=1}^{n} f(\tilde Z_i) -f(Z_i)\\
+&\overset{dist}{=} \frac{1}{n} \sum_{i=1}^{n} f(Z_i) - f(\tilde Z_i)\\
+&\overset{dist}{=} \frac{1}{n} \sum_{i=1}^{n} \sigma_i ( f(Z_i) - f(\tilde Z_i) )
+\end{align*}
+
+So,
+\begin{align*}
+\mathbb{E}_{Z^n} \Delta_n(\F) &= \mathbb{E}_{Z^n} \mathbb{E}_{\tilde Z^n} \left[ |\frac{1}{n} \sum_{i=1}^{n} \sigma_i ( f(Z_i) - f(\tilde Z_i) )| \right]\\
+ &\le \mathbb{E}_{Z^n\sigma} \left[ \sup_{f\in\mathcal{F}} |\frac{1}{n} \sum_{i=1}^{n} \sigma_i ( f(Z_i) )| \right] + \mathbb{E}_{\tilde Z^n\sigma} \left[ \sup_{f\in\mathcal{F}} |\frac{1}{n} \sum_{i=1}^{n} \sigma_i ( f(\tilde Z_i) )| \right]\\
+ &=2 \mathbb{E}_{Z^n\sigma} \left[ \sup_{f\in\mathcal{F}} |\frac{1}{n} \sum_{i=1}^{n} \sigma_i ( f(Z_i) )| \right]\\
+ &= \mathbb{E}_{Z^n} \left[ \mathbb{E}_{\sigma} \left[ \left. \sup_{f\in\mathcal{F}} |\frac{2}{n} \sum_{i=1}^{n} \sigma_i ( f(Z_i) )| \right| Z^n \right] \right]\\
+ &=\Rad(\F)
+\end{align*}
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\bibliographystyle{scribebibsty}
+\bibliography{s782references}
+
+\end{document}
