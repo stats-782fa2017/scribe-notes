@@ -1,0 +1,257 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage{bbm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+
+
+% To be entered
+\setcounter{lecnum}{22}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Kiran\ Kumar}
+\newcommand{\chtitle}{Upper Bounds}
+\newcommand{\lecdate}{7 November 2017}
+
+
+\begin{document}
+	\rule{6.5in}{1pt}
+	
+	\textsc{STAT--S 782
+		\hfill \thelecnum\ --- \chtitle
+		\hfill \lecdate}
+	
+	\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+	\rule{6.5in}{1pt}
+	
+	
+	\section*{Procedure for proving a estimate is minimax}
+	\begin{itemize}
+		\item{Derive an upper bound: 
+			\begin{align*}
+				&\exists\hat{\theta},\quad s.t.,\quad R(\theta,\hat{\theta})\leq r_{upper}\\
+				&\forall \theta \in \Theta\\
+		\end{align*}}
+		\item{Derive a lower bound
+			\begin{align*}
+				&\forall\hat{\theta},\exists \theta\quad s.t.,\quad R(\theta,\hat{\theta})\geq r_{lower}
+			\end{align*}    
+		}
+	\end{itemize}
+	
+	If $r_{upper}$ and $r_{lower}$ are the same then we found the minimax estimate with respect to our risk function. 
+	%However, we usually look at "rate" minimax to bound the risk with respect to our data.
+	
+	\begin{theorem}[minimax risk is looser then worst-case bayes risk]
+		$$R^* \geq R^*_B := \sup\limits_{\pi \in M(\theta)}\inf\limits_{\theta} E_{\pi}\left[ E_{p_\theta}[l(\theta,\hat{\theta}\right]]$$
+	\end{theorem}
+	
+	\section*{Example}
+	
+	\begin{align*}
+		X &\sim N(\theta,1)\\
+		l(\theta,\hat{\theta}) &= \left(\theta-\hat{\theta}\right)^2\\
+		\hat{\theta} &= X
+	\end{align*}
+	
+	Let, 
+	\begin{align*}
+		\inf\limits_{\hat{\theta}} \sup\limits_{\theta \in \Theta} E_{\theta}\left[ l(\theta,\hat{\theta})\right] &\leq 1\\
+		\Pi(\theta) &\sim N(0, \sigma^2)
+	\end{align*}
+	
+	Then, we can write,
+	\begin{align*}
+		E_{\pi}\left[ E_{p(\theta)} [l(\theta,\hat{\theta}]\right] &= \sup\limit_{\pi}\inf\limit_{\hat{\theta}}\left( \frac{\sigma^2}{\sigma^2+1} \right) \leq 1  \qquad ;\forall \sigma^2 > 0\\
+		if \sigma^2 \rightarrow \infty &\implies \frac{\sigma^2}{\sigma^2 + 1} \rightarrow 1\\
+		R^*_{Bayes} &\geq 1\\
+	\end{align*}
+	
+	Therefore, we can say that the minimax Risk is one.
+	
+	\subsection*{Another perspective}
+	\begin{align*}
+		R^* \geq R*_{Bayes} = \underbrace{\sup\limits_{\pi \in M(\theta)} R^*_{\pi}}_\text{Dual of $R^*$}
+	\end{align*}
+	This inequality is a weak duality, if we can show strong duality that would give us an equality.
+	
+	Suppose $\Theta$ is a finite set, $\lvert \Theta \rvert < \infty$, then
+	
+	\begin{align*}
+		R^* = \min\limits_{\hat{\theta}} \max\limits_{\theta}\ E_{\theta}\left[ l(\theta,\hat\theta)\right]
+	\end{align*}
+	
+	is a convex function if $l$ is convex. We can find a dual by minimization.
+	
+	\begin{align*}
+		R^* = \min\limits_{\hat{\theta},t}\ t \qquad s.t., E_{\theta}\left[ l(\theta,\hat\theta)\right] \leq t; \quad \forall \theta \in \Theta\\
+	\end{align*}
+	
+	Let $u\geq0$, we can write the Lagrangian as 
+	\begin{align*}
+		L(\hat\theta,t,u) &= t + u^T\left[ E_\theta[l(\theta,\hat\theta)-t]\right]\\
+		&= (1-u^T \mathbbm{1})t + u^T E_\theta\left[ l(\theta,\hat\theta)\right]\\
+	\end{align*}
+	Here, $L$ is $\infty$ unless the term $u^T \mathbbm{1}=1$. $u$ is a probability distribution on $\Theta$.
+	
+	The dual problem can be written as 
+	
+	\begin{align*}
+		\max\limits_{\substack{u\geq 0 \\ u^T \mathbbm{1}=1}} \min\limits_{\hat\theta,t}\  L(\hat\theta, t,u)\\
+		= \max\limits_{\pi \in M(\Theta)} \min\limits_{\hat\theta}\ R_{\pi}(\hat\theta)\\
+		= \max\limits_{\pi \in M(\Theta)} R^*_\pi
+	\end{align*}
+	
+	\section*{Maximum Likelihood}
+	For parametric models MLE's are asymptotically minimax (under some conditions).
+	
+	Consider the square error loss \[ R(\theta,\hat\theta) = Var(\hat\theta) + Bias^2(\hat\theta)\].
+	This bias variance decomposition has an MLE which is bound as \[Bias=O(n^{-2}), Var=O(n^{-1})\]
+	
+	Under right regularity conditions (for fisher information $\mathbb{I}_\theta$)
+	\[Var(\hat\theta_{MLE}) = \frac{C}{n\mathbb{I}_\theta}\]
+	
+	As $n\rightarrow \infty$, variance dominates and for large $n\ MSE\approx Var$ which is the Cramer-Rao lower bound. Therefore the MSE will provide an efficient estimator or a minimax estimator.
+	
+	\section*{The Hodges Estimator}
+	
+	Let $x_1, \ldots, x_n$ be iid $N(\theta,1)$,
+	
+	$$\hat\theta_{MLE} = \bar{X}$$
+	
+	Let $J_n = \left[ -\frac{1}{n^{\frac{1}{4}}}, \frac{1}{n^{\frac{1}{4}}} \right]$
+	
+	$$
+	\tilde{\theta} = \begin{cases}
+	\bar{X} \quad if\ \bar{X} \notin J_n \\
+	0 \quad if\ \bar{X} \in J_n
+	\end{cases}
+	$$
+	
+	There are two cases possible:
+	Case 1, suppose $\theta \neq 0 $, then choose $\epsilon > 0 $ such that $ I = (\theta-\epsilon,\theta+\epsilon)$ does not contain zero. By LLN $p(\bar{X} \in I ) \rightarrow 1 $. At the same time $J_n$ shrinks with high probability.
+	
+	Case 2, suppose $\theta=0$ then $P(\bar{X} \in J-n) = P(\lvert\bar{X}\rvert \leq n^{-\frac{1}{4}}) = P(\sqrt{n}\lvert \bar{X}\rvert \leq n^{\frac{1}{4}}) = P(\lvert N(0,1)\rvert \leq n^{\frac{1}{4}}) \rightarrow 1 $
+	
+	For large n, $\tilde{\theta} = 0 = \theta$ with high probability. 
+	
+	\section*{James-Stein Estimator}
+	Let $X\sim N_p(\theta, I-p)$, $\hat{\theta}(x0 = x$ is minimax for $l(\theta,\hat{\theta})=\lVert\theta-\hat{\theta} \rVert_2^2$
+	
+	$X = \hat\theta(x) = \argmin\limits_{a} \lVert a-x \rVert_2^2$. This is for the minimax case, we look at the other case below.
+	
+	$\hat\theta_{JS}$ has the property that  $\sup\limits_\theta E\left[ \lVert\theta-\hat{\theta}_{js} \rVert_2^2\right] = \sup\limits_\theta E\left[ \lVert\theta-x \rVert_2^2\right]$
+	
+	But for almost all $\theta$ $E\left[ \lVert\theta-\hat{\theta}_{js} \rVert_2^2\right] = E\left[ \lVert\theta-x \rVert_2^2\right]$.
+	
+	We can write $\hat{\theta}_{js}(x) = \left( 1-\frac{p-2}{\lVert x \rVert^2_2}\right)x $
+	
+	This gives us better risk everywhere as long as $p\geq3$. Further, as $\lVert\theta\rVert^2_2 \rightarrow \infty$, $R(\theta,\hat\theta_{js})$ converges upward to $R(\theta,x)$
+	
+	We can shrink the estimator to any value $v\in R^p$ as below:
+	
+	$$ \hat\theta_{js} = \left( 1- \frac{p-2}{\lVert x-v \rVert^2_2}\right)(x-v) + v$$
+	
+	
+	\bibliographystyle{scribebibsty}
+	\bibliography{s782references}
+	
+\end{document}
