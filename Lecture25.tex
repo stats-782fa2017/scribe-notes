@@ -1,0 +1,285 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\usepackage{mathtools}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+
+
+% To be entered
+\setcounter{lecnum}{25}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Jivitesh Poojary}
+\newcommand{\chtitle}{Lower bounds II}
+\newcommand{\lecdate}{28 November 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+
+\section{Ingredients}
+
+A class of "parameters" $\Theta$
+
+A family of distributions $\{ P_\theta : \theta \in \Theta\}$
+
+A semi-distance on $\Theta$
+$d: \Theta$ x $\Theta \longrightarrow [0,\infty]$
+(satisfy triangle inequality)
+(2 parameters are closer)
+
+Goal (rate minimax)
+$$\liminf_{n\to\infty} \inf_{\theta} \sup_{\theta \in \Theta} \Expect{{w(\psi^{(-1)}_n)d(\hat \theta,\theta)}}$$ 
+
+$w$ can be any monotonic increasing function
+
+\section{Scheme}
+\begin{enumerate}
+
+\item Convert expectations to probabilities
+$$\Expect{{w(\phi^{-1}_n)d(\hat \theta,\theta)}}  \geq w(A)P(d(\hat \theta,\theta) \geq \psi_n A)$$
+
+(using Markov's inequality)
+
+\item Reduction to finite set, $\theta_0,....,\theta_m \in \Theta$ 
+
+$\longrightarrow$ Won't work if the parameters are chosen randomly
+
+$\longrightarrow$ We need them to be "separated" in our distance d(.,.)
+
+\item Convert from estimation to testing (show hard to test)
+
+(distinguish $\theta_j$ from $\theta_k$) < small 
+
+(hard to tell difference between 2 $\theta$'s)
+\end{enumerate}
+
+\begin{example} 
+Regression at point $x_0$
+Assumptions:
+$y_i = f(x_i) + , i = 1..,..,n$
+f:[0,1] 
+
+are iid with density P that satisfies the following
+
+holds if  are sub-gaussians
+
+$X_i$ are deterministic [0,1] and  st A [0,1],n >=1
+(equal amount of information all across)
+\end{example}
+
+
+
+
+\section{Choices}
+\begin{enumerate}
+
+\item $f \in \Theta = \int\mathllap{\sum} (\beta,L) $
+
+Holder class, f is any function such that
+
+$$ \Rightarrow \int (f^{\beta} (x))^2 dx \leq L^2$$
+
+(smoother derivatives)
+
+\item $P_f$ given by Assumptions
+(class of probability distributions)
+
+\item $d(f,g) = |f(x_o) - g(x_o)|$
+we want $\psi$ to be $n^\frac{-\beta}{2\beta + 1}$
+
+(this case we knew about the estimator, usually you may need to guess this and try it)
+
+Step 1 + 2 look at 
+$$\inf_{f} \max_{f \in \{f_0,f_1\}} P_f(|\hat f(x_0) - f(x_0)| \geq A \psi_n) \geq c' > 0$$
+
+need $A, c', f_0, f_1$
+
+$$f_0 = 0$$
+$$f_1^{(x)} = Lh^\beta_nK(\frac{x-x_0}{n}), x\in [0,1]$$
+with $$h_n = c_0n^{\frac{-1}{2\beta + 1}}$$
+
+choice of f and h is non trivial
+
+Require $$K \in \int\mathllap{\sum} (\beta,\frac{1}{2}) c^\infty(\Re)$$
+
+$$K(u) > 0 \iff u \in (\frac{-1}{2}, \frac{1}{2})$$
+
+eg: $$K(u) = c_iK_0(2u)$$
+
+$$K_0(u) = exp(\frac{-1}{1 - u^2})I(|u| \leq 1)$$
+
+as n increases bump becomes shorter and narrower
+\end{enumerate}
+
+\begin{enumerate}
+\item Claimed that $f_i \in \int\mathllap{\sum} (\beta, L)$ , show this
+\item Need $|f_0(x_0) - f_1(x_0)| \geq 2s = 2A\psi_n$
+(parameters are  far enough apart)
+\item Need $P_f0$, $P_f1$ are "close" (hard to differentiate)
+
+Different metrics for probabilities
+
+last time : LRT 
+
+this time :KL Divergence
+
+$$K(P_0, P_1) = \int \log\frac{dP_0}{dP_1} dP_0, if P_0 << P_1$$
+\end{enumerate}
+
+\begin{enumerate}
+\item Clear that $f_0 \in \sum (\beta,L)$
+show $f_1 \in \sum (\beta,L)$
+Let $$L = \lfloor{\beta}\rfloor, f_1^{(l)}x = Lh_n^{\beta-l}k{(l)}\frac{x-x_0}{h_n}$$
+$$|f_1^l(x) - f_1^l(x')| = Lh_n^{\beta-l}|K^{(l)}(u) - k^{(l)}(u')|$$
+$$\leq h_n^{\beta-l}|u - u'|^{\frac{\beta-l}{2}}$$
+$$= \frac{L}{2} |x-x'|^{\beta-l}$$
+
+\item $$|f_0(x_0) - f_1(x_0)| = |f_1(x_0)|$$
+$$ = Lh^{\beta}k(0) $$
+$$ = Lc_0^{\beta}k(0) n^{\frac{-\beta}{2\beta + 1}}$$
+$$ = \frac{1}{2}Lc_0^{\beta}k(0) n^{\frac{-\beta}{2\beta + 1}}$$
+
+$$A = \frac{1}{2}Lc_0^{\beta}k(0) , \psi_n = n^{\frac{-\beta}{2\beta + 1}}$$
+
+\item $$K(P_{f_0}, P_{f_1}) \leq \alpha < \infty$$
+$$\left[c' \geq \max\{\frac{1}{4}e^{-\alpha}, \frac{1-\sqrt{\frac{\alpha}{2}}}{2}\}\right]$$
+
+Alternatively you can use total variational distance.
+
+For n large enough,
+$nh_n \geq 1$ and $ Lh_n^{\beta}k(u) \leq v_o \forall u$
+
+$$K(P_0,P_1) = \int .. \int \log \pi \frac{\P(y_i)}{P(y_i - f_1(x_i))} \pi [P(y_i)dy_i]$$
+$$= \sum \int \log \frac{P(y_i)}{P(y_i - f_1(x_i))} P(y_i)dy_i$$
+$$\leq P_{*}\sum_{i=1}^{n} f_1^2(x_i)$$
+$$= P_{*}L^2h_n^{2\beta} \sum K^2 (\frac{x_i - x_0}{h_n})$$
+$$\leq P_{*}L^2h_n^{2\beta} K_{max}^2\sum I(|\frac{x_i - x_0}{h_n}| \leq \frac{1}{2})$$
+$$\leq P_{*}a_0L^2h_n^{2\beta} K_{max}^2 max(nh_n,1)$$
+$$= P_{*}a_0L^2h_n^{2\beta +1} K_{max}^2 n$$
+
+take, $$C_0 = (\frac{\alpha}{P_{*}a_0L^2K_{max}^2})^\frac{1}{2\beta + 1}$$
+
+Poor choice of $f_1$
+
+take $x_i = \frac{1}{n} $
+$$f_1(x) = (2\pi n)^{-1}sin(2\pi nx), \in \int\mathllap{\sum} (1,1)$$
+$$\Rightarrow f_0(\frac{i}{n}) = f_1(\frac{i}{n})$$
+$$\Rightarrow P_0 = P_1$$
+$$\Rightarrow K(P_0,P_1) = 0$$
+take $$d(f_0, f_1) = ||f_0 - f_1||_{\infty} = (2\pi n)^{-1}$$
+then $$s = (4\pi n)^{-1} so \psi_n = \frac{c}{n}$$
+known upper bound is $$(\frac{logn}{n})^\frac{1}{3}, $$
+for  $$ \int\mathllap{\sum} (1,1)$$
+\end{enumerate}
+
+\bibliographystyle{scribebibsty}
+\bibliography{s782references}
+
+\end{document}
