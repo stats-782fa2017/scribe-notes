@@ -101,7 +101,7 @@
 \newcommand{\R}{\mathbb{R}}
 \renewcommand{\S}{\mathcal{S}}
 \newcommand{\Z}{\mathbb{Z}}
-\newcommand{\N}{\mathbb{N}}
+\newcommand{\N}{\mathcal{N}}
 \newcommand{\pow}{\raisebox{.15\baselineskip}{\Large\ensuremath{\wp}}}
 \renewcommand{\O}{\ensuremath{\mathcal{O}}}
 \newcommand{\rad}{\ensuremath{\mathfrak{R}}}
@@ -206,6 +206,7 @@ f_\omega(x) = f_0(x) + \sum_{j\in J}\omega(j)\gamma_{m,j}(x)
 
 \omega is binary vec of size m^d, \omega(j)\in\{0,1\}
 
+For details, see \cite{mcdonald}
 \begin{example}
 m=4,d=2,J=\{(1,1),(1,2),(2,1),...,(4,4)\}
 4^2 = 16
@@ -213,7 +214,38 @@ f_\omega has 0 to 16 ~ \Rightarrow 2^16 densities
 
 \end{example}
 
+
 \textbf{Note}
-In general, for many hyps will always choose elements acc to vertices of binary hypercube.
+In general, for $m$ hyps will always choose elements acc to vertices of binary hypercube.
+
+\begin{enumerate}
+\item Can show f_\omega is smooth enough if m>\left[dC(C)^d\right]^{1/\beta}
+(if m too small, edges of hypercube too small to get useful perturbations)
+\item to show appropriate separation, need to look at ||f_\omega-f_{\omega'}||_p=||\sum_{j\in J}(\omega(j) - \omega'(j))\gamma_{m,j}||_p
+&= m^{-\beta-d/p}H^{1/2}(\omega,\omega')||\Gamma||_p, where H is the Hamming dist.
+Hamming dist separation is generic part of all $m$ hyp proofs
+
+\begin{lemma}[Varshamov-Gilbert]
+\label{vg}
+Let m\geq 8.  Then \exists D\subseteq \{\omega\} \st \forall \omega,\omega'\in D,
+H(\omega,\omega')\geq \frac{m^d}{8} and
+|D|\geq\exp(m^d/8)
+\end{lemma}
+
+[Q: is \ref{vg} related to isoperimetric ineqs?
+
+We will shrink class to D, throwing away alternatives that are ``too close''.
+Then m^{-\beta-d/p}H^{1/2}(\omega,\omega')||\Gamma||_p 
+	\geq m^{-\beta-d/p} (\frac{m^d}{8})^{1/p} dC||\Gamma_0||_p^d
+	= 8^{-1/p}dm^{-\beta}C||\Gamma_0||_p^d
+
+\item K(P_\omega,P_0)\leq\cdots\leqC^dnd^2m^{-2\beta}.  Need to choose m to annihilate n if we want \alpha\log m bound (and satisfy many other conds):
+Choose m \st nC^dd^2m^{-2\beta}\leq \alpha\log |D|
+\Rightarrow m\leq C_1d^2nC_2^d\right]^{\frac{1}{2\beta+d}}
+
+\textbf{Combine}: set m=||\Gamma_0||_p^{\frac{d+1}{\beta}}\kappa(d^2n)^{\frac{1}{2\beta+d}}
+
+\end{enumerate}
+	
 
 \end{document}
