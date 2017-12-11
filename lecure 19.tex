@@ -1,0 +1,229 @@
+
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+
+
+% To be entered
+\setcounter{lecnum}{22}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Adithya Vadapalli}
+\newcommand{\chtitle}{Concluding VC Theory and Intro to Minimax Theory}
+\newcommand{\lecdate}{31 October 2017}
+
+
+\begin{document}
+	\rule{6.5in}{1pt}
+	
+	\textsc{STAT--S 782
+		\hfill \thelecnum\ --- \chtitle
+		\hfill \lecdate}
+	
+	\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+	\rule{6.5in}{1pt}
+	
+	
+	\section*{Introduction}
+	In this lecture, first we will wrap up our discussion about VC-Dimension. Then we will give a brief introduction to Minimax theory.
+	
+	\section{VC - Wrap up}
+
+	Suppose $f \in \mathcal{F}$. $f : X \to \{0, 1\}$. $\hat{f}_{erm} = \argmin_{f \in \mathcal{F}} \frac{1}{n} \sum_{i=1}^{n}I(f(x_i) \neq y_i)$
+	If VC dimension is finite , then with probability at least $1 - \delta$,
+	\[
+	 R(\hat{f}_{erm}) \le R(f^{*}) + c(\sqrt{V/n} + \sqrt{\log (1/\delta)/n})
+	\]	
+	
+	For any estimator,
+	\[
+	R(f) \le R_{n}(\hat{f}) + c(\sqrt{V/n} + \sqrt{\log (1/\delta)/n})
+	\]
+	We have the following theorem,
+	\begin{theorem}
+		$\P(\sup_{f} |\hat{R}(f) - R(f)| \ge \epsilon) \le 8 (n + 1)^V e^{-n \epsilon^2/32}$
+	\end{theorem}
+	
+	Note that, $(n + 1)^V$ is called the shattering coefficient of $f$.
+	
+	\begin{corollary}
+		$\P(|R(\hat{f}_{erm}) - R(f^{*}| > \epsilon)) \le 8 (n + 1)^V e^{-n\epsilon^2/128}$
+	\end{corollary}
+
+
+	\begin{corollary}
+	$\mathbb{E}[\sup_{f \in \mathcal{F}}|\hat{R}(f) - R(f)|] = O(\sqrt{V \log n / n})$
+	\end{corollary}
+
+	\begin{corollary}
+	$\mathbb{E}[|R(\hat{f}_{erm}) - R(f^{*}|] = O(\sqrt{V \log n / n})$
+	\end{corollary}
+
+	\begin{proof}
+		Write $Z_{n} = \sup_{f} |\hat{R}_{n}(f) - R(f)|$.
+		
+		And, $\P(Z_n > \epsilon ) \le c(n + 1)^{V} e^{-n\epsilon^2 c} \implies\P(Z_n^2 > \epsilon^2 ) \le c(n + 1)^{V} e^{-n\epsilon^2 c}$. Substitute $\epsilon^2$ with $t$. We get, $\P(Z_n^2 > t ) \le c(n + 1)^{V} e^{-n\epsilon^2 c}$.
+		
+		We have, $\mathbb{E}[Z_n^2] = \int_{0}^{\infty} \P(Z_n^2 > t) dt \quad = \quad \int_{0}^{S} \P(Z_n^2 > t) dt +  \int_{S}^{\infty} \P(Z_n^2 > t) dt \quad \le \quad S +  \int_{S}^{\infty} \P(Z_n^2 > t) \quad \le \quad S + c(n + 1)^V \int_{S}^{\infty} \P(Z^2 > t) dt \quad = \quad S + c(n + 1)^V(\frac{e^{-cnS}}{cn}) \quad  = \quad V \log(n + 1)/cn + c/n$
+	\end{proof}
+
+ Thus we have the following $\mathbb{E}[Z_n] \le \sqrt{\mathbb{E}[Z_n^2]} \le c \sqrt{V \log(n + 1) / n}$
+ 
+ \subsection{Tightness of the bounds}
+ How tight are the above bound? Suppose $Y = f^{*}(x)$ (deterministic learning). $f^{*} \in \mathcal{F}$. It can be shown that (Vapnik, 1998) $\mathbb{E}[R\hat{f}_{erm} - R(f^{*})] = O(V/n)$.
+ 
+ The ``noisiness'' of $\mathbb{E}[Y|X = x] = \eta(X)$ is important.
+ 
+ Recall that, $f^{*}(x) = \begin{cases}
+ 1 \quad \eta(X) \ge 1/2 \\
+  0 \quad \text{otherwise}
+ \end{cases}
+ $
+ 
+ \begin{definition}
+ $\mathcal{P}(h) = \{p \in \mathcal{P} : |2 \eta(x) - 1| \ge h \}$. 
+ \end{definition} 
+
+If $h = 0$, it is the noisy case. No constraints on $\mathcal{P}$. We will have, $O(\sqrt{V/n})$. $h = 1$ us noiseless. We will have $O(V/n)$.
+
+\begin{theorem}
+	Suppose $f^{*} \in \mathcal{F}$, $VC(f) = V < \infty$. $\inf_{f \in \mathcal{F}} R(f) \ge c \min(\sqrt{V/n}, V/n)$
+\end{theorem}
+
+We have the following implications.
+
+\begin{enumerate}
+	\item If $h = 0$, $\hat{f}_{erm}$ is optimal.
+	\item If $h = 1$, $\hat{f}_{erm}$ is optimal.
+\end{enumerate}
+
+\section{Statistical Minimax}
+
+We have $\theta \in \Theta$, estimate $\theta$ using data $(X_1, \cdots , X_n)$. Let $\hat{\theta}$ be estimator. $\hat{\theta} = \hat{\theta}(X_n)$. We specify a loss function $L(\theta, \hat{\theta}) \to \mathbb{R}^{+}$.
+
+\begin{enumerate}
+	\item $||\theta - \hat{\theta} ||_{2}^{2}$ is squared loss.
+	\item $|\theta - \hat{\theta} |$ is absolute loss.
+	\item $||\theta - \hat{\theta} ||_{p}^{p}$ is $\ell_{p}$ loss.
+	\item $I(\theta \neq \hat{\theta})$ is 0-1 loss.
+\end{enumerate}
+
+\begin{definition}
+	$R(\theta, \hat{\theta}) = \mathbb{E}[L(\theta, \hat{\theta})] = \int \cdots \int L(\theta, \hat{\theta}(X^{n})) d F(X^n)$
+\end{definition}
+
+\subsection{Example}
+Let $X \sim \mathcal{N}(0,1)$, $\hat{\theta}_{1} = X$ , $\hat{\theta}_{2} = 3$. Then,
+$R(\theta, \hat{\theta}_{1}) = 1$ and $R(\theta, \hat{\theta}_{2}) = (\theta - 3)^2$  
+
+\begin{definition}(Bayes' Risk)
+	$B_n(\hat{\theta}) = \int R(\theta, \hat{\theta}) \Pi(\theta) d \theta$	
+\end{definition}	
+
+\begin{definition}
+	The minimax estimator of $\theta$ is the one that satisfies $\sup_{\theta} R(\theta, \hat{\theta}) = \mathcal{R}_{n}(\theta).$
+\end{definition}
+	\bibliographystyle{scribebibsty}
+	\bibliography{s782references}
+	
+\end{document}
+

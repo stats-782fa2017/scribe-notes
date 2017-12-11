@@ -1,0 +1,314 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+
+
+% To be entered
+\setcounter{lecnum}{23}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Lei Ding}
+\newcommand{\chtitle}{Nonparametric Estimation I}
+\newcommand{\lecdate}{9 Nov 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+\section{Kernel density estimators}
+Suppose we have data $X_1, \cdots, X_n \stackrel{ind}{\sim} F$ with support on $\R$. 
+Assume $\exists \ p$ such that $F(x) = \int_{- \infty}^{x} p(x) \, \mathrm{d}x$.
+We want to estimate $p$, but that is hard. Instead we can estimate $F$ using empirical cdf.
+\begin{equation}
+  F_n(x_0) = \frac{1}{n} \sum_{i=1}^{n} I (X_i \le x_0)
+  \label{eq:1}
+\end{equation}
+
+By DKW we know
+\begin{equation}
+  \P (\sup_{x_0} |F_n(x_0) - F(x_0)| > \epsilon) \le 2 e^{-2n \epsilon^2}
+  \label{eq:2}
+\end{equation}
+
+For sufficiently small $h > 0$ we can write an approximation
+\begin{align}
+  p(x_0) & \approx \frac{F(x_0 + h) - F(x_0 - h)}{2h} \\
+  & \approx \frac{F_n (x_0 + h) - F_n (x_0 - h)}{2h} \\
+  & = \frac{1}{2nh} \sum_{i=1}^{n} I (x_0-h < x_i \le x_0 + h)\\
+  & =: \frac{1}{nh} \sum_{i=1}^{n} K_0 (\frac{x_i - x_0}{h})
+  \label{eq:3}
+\end{align}
+
+where $K_0 (u) = \frac{1}{2} I (-1 < u\le 1)$.
+
+A generalization of this estimation is 
+\begin{equation}
+\hat{p}_n (x_0) =: \frac{1}{nh} \sum_{i=1}^{n} K(\frac{X_i - x_0}{h})
+\end{equation}
+
+where $K: \R \to \R$ is an integrable function satisfying $\int K(u) \, \mathrm{d}u =1$.
+Such a function $K$ is called a kernel and the parameter $h$ is called a bandwidth of the
+estimator.
+$\hat{p}_n (x_0)$ is called the kernel density estimator (KDE) or the Parzen-Rosenblatt estimator.
+
+
+Some classical examples of kernels are the following:
+\begin{enumerate}
+\item the Gaussian kernel: $K(u) = \frac{1}{\sqrt{2 \pi}} exp (- \frac{u^2}{2})$
+\item the Silverman kernel: $K(u) = \frac{1}{2} exp (- \frac{|u|}{2}) \sin (\frac{|u|}{\sqrt{2}} + \frac{\pi}{4})$
+\item the Epanechnikov kernel: $K(u) = \frac{3}{4} (1-u)^2 I (|u| \le 1)$
+\end{enumerate}
+
+
+A few note on the KDE:
+\begin{enumerate}
+\item Truncation is common. 
+\item If the kernel $K$ takes only nonnegative values, then $\hat{p}_n$ is a density function.
+\item We won't require $K$ takes only nonnegative values.
+\item KDE can be generalized to higher dimension.
+\end{enumerate}
+
+
+
+\section{Mean squared error of kernel estimators at fixed $x_0$}
+
+Mean squared error of kernel estimators at fixed $x_0$ is
+\begin{align}
+MSE(x_0) &= \Expect { (p(x_0) - \hat{p}_n(x_0))^2 } \\
+&= b^2(x_0) + \sigma^2(x_0)
+\end{align}
+
+where $b(x_0)$ is the bias and $\sigma^2(x_0)$ is the variance.
+
+
+\subsection*{Variance part}
+
+\begin{proposition}
+Let $p(x) \le p_{max} < \infty$ for and $x$. Suppose $\int K^2(u) \, \mathrm{d}u < \infty$. Then for $n \le 1$, 
+\begin{equation}
+\sigma^2(x_0) \le \frac{p_{max} \int K^2(u) \, \mathrm{d}u}{nh}
+\end{equation}
+\end{proposition}
+
+\textbf{Proof} Let
+\begin{equation}
+\eta_i (x_0) = K(\frac{X_i - x_0}{h}) - \Expect{K(\frac{X_i - x_0}{h})}
+\end{equation}
+\begin{align}
+\Expect{\eta_i^2(x_0)} &\le \Expect{ K^2(\frac{X_i - x_0}{h}) }\\
+&= \int K^2(\frac{z - x_0}{h}) p(z) \, \mathrm{d}z \\
+&\le p_{max} h \int K^2(u) \, \mathrm{d}u
+\end{align}
+
+
+Thus
+\begin{align}
+\sigma^2(x_0) &= \Expect{ (\frac{1}{nh}  \sum_{i=1}^{n} \eta_i (x_0))^2 }\\
+& =\frac{1}{nh^2} \Expect{\eta_i^2(x_0)}\\
+&\le \frac{C_1}{nh}
+\end{align}
+
+
+\subsection{Bias part}
+The bias of the kernel density estimator has the form
+\begin{align}
+b(x_0) &= \Expect{\hat{p}_n(x_0)} - p(x_0)\\
+&= \frac{1}{h} \int K(\frac{z-x_0}{h}) p(z) \, \mathrm{d}z - p(x_0)
+\end{align}
+
+
+\begin{definition}
+Let $T$ be an interval in $\R$ and let $\beta$ and $L$ be two positive
+numbers. The \textbf{H$\ddot{o}$lder class $\Sigma(\beta, L)$} on $T$ is defined as the set of 
+$ l = \left \lfloor \beta \right \rfloor$
+times differentiable functions $f : T \to R$ whose derivative $f^{(l)}$ satisfies
+\begin{equation}
+|f^{(l)}(x) - f^{(l)}(x^\prime)| \le L |x - x^\prime|^{\beta - l}
+\end{equation}
+for $\forall x, x^\prime \in T$.
+\end{definition}
+
+
+\begin{definition}
+Let  $l \ge 1$ be an integer. We say that $K : \R \to \R$ is \textbf{a kernel of order $l$} if the functions 
+satisfy $ \int K(u) \, \mathrm{d}u = 0$
+and 
+$ \int u^j K(u) \, \mathrm{d}u = 0$.
+for $j=1, \cdots, l$
+\end{definition}
+
+\begin{proposition}\label{prop:bias}
+Assume that 1) $p \in \mathbb{P}(\beta, L) = \{p : p \ge 0, \int p = 1, p \in \Sigma(\beta, L)\}$,
+2) $K$ is a kernel of order $l = \left \lfloor \beta \right \rfloor$ and $ \int |u|^{\beta} |K(u)| \, \mathrm{d}u < \infty$.
+Then $\forall x_0, h>0, n \ge 1$
+\begin{equation}
+|b(x_0)| \le \frac{Lh^\beta}{l !} \int |u|^{\beta} |K(u)| \, \mathrm{d}u = C_2 h^\beta
+\end{equation}
+\end{proposition}
+
+\textbf{Proof}
+Let 
+\begin{equation}
+u=\frac{z-x_0}{h}
+\end{equation}
+, then $\mathrm{d}z = h \, \mathrm{d}u$ and
+\begin{equation}
+b(x_0) = \int K(u) [p(x_0 + uh) -p(x_0)] \, \mathrm{d}u
+\end{equation}
+Since
+\begin{equation}
+p(x_0 + uh) = p(x_0) + p^{\prime}(x_0) uh + \cdots + \frac{(uh)^l}{l !} p^{(l)} (x_0 + \tau uh)
+\end{equation}
+for some $\tau \in [0, 1]$. Then
+\begin{align}
+b(x_0) &= \int K(u) \frac{(uh)^l}{l !} p^{(l)} (x_0 + \tau uh) \, \mathrm{d}u \\
+&= \int K(u) \frac{(uh)^l}{l !} [p^{(l)} (x_0 + \tau uh) - p^{(l)} (x_0)]\, \mathrm{d}u
+\end{align}
+Thus
+\begin{align}
+|b(x_0)| &\le \int |K(u)| \frac{|uh|^l}{l !} |p^{(l)} (x_0 + \tau uh) - p^{(l)} (x_0)| \, \mathrm{d}u \\
+& \le \int |K(u)| \frac{|uh|^l}{l !} L |\tau uh|^{\beta - l} \, \mathrm{d}u \\
+& \le C_2 h^\beta
+\end{align}
+
+\begin{theorem}
+Under conditions 1) and 2) from \autoref{prop:bias}, let $h = \alpha n^{\frac{1}{2\beta + 1}}$,
+then for $n \ge 1$
+\begin{equation}
+\sup_{x_0} \sup_{p \in \mathbb{P}(\beta, L)} \Expect{(\hat{p}_n(x_0) - p(x_0))^2} \le C n^{- \frac{2\beta}{2\beta+1}}
+\end{equation}
+\end{theorem}
+
+\textbf{Proof} 
+Firstly, we can show from  $p \in \mathbb{P}(\beta, L)$ that $p(x_0) \le p_{max}$ for $\forall x_0 \in \R$.
+
+Since
+\begin{equation}
+MSE \le \frac{C_1}{nh} + C_2h^\beta
+\end{equation}
+Let
+\begin{equation}
+h_{*} = (\frac{C_1}{2\beta C_2^2})^{\frac{1}{2\beta+1}} n^{- \frac{1}{2\beta+1}}
+\end{equation}
+Then
+\begin{equation}
+MSE \le C_2^2 h_{*}^{2\beta} + C_1 n^{-1} h_{*}^{-1} = C n^{- \frac{2\beta}{2\beta+1}}
+\end{equation}
+
+
+
+
+
+
+
+
+%\bibliographystyle{scribebibsty}
+%\bibliography{s782references}
+
+\end{document}

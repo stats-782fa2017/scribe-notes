@@ -1,0 +1,197 @@
+\documentclass[10pt]{article}
+% Include statements
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath,amsthm}
+\usepackage[sort]{natbib}
+\usepackage[margin=1in,nohead]{geometry}
+\usepackage{multirow,rotating,array}
+\usepackage{algorithm,algorithmic}
+\usepackage{pdfsync}
+\usepackage{hyperref}
+\hypersetup{backref,colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{10pt}
+
+
+% For sequential numbering
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum\ -\ \arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+
+
+% Theorem environments (\autoref compatible)
+\usepackage{aliascnt}
+\newtheorem{theorem}{Theorem}[lecnum]
+
+\newaliascnt{result}{theorem}
+\newtheorem{result}[theorem]{Result}
+\aliascntresetthe{result}
+\providecommand*{\resultautorefname}{Result}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{theorem}
+\newtheorem{proposition}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{theorem}
+\newtheorem{corollary}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+\newaliascnt{conj}{theorem}
+\newtheorem{conjecture}[conj]{Conjecture}
+\aliascntresetthe{conj}
+\providecommand*{\conjautorefname}{Corollary}
+\newaliascnt{def}{theorem}
+\newtheorem{definition}[def]{Definition}
+\aliascntresetthe{def}
+\providecommand*{\defautorefname}{Definition}
+\newaliascnt{ex}{theorem}
+\newtheorem{example}[ex]{Example}
+\aliascntresetthe{ex}
+\providecommand*{\exautorefname}{Example}
+
+
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{\Alph{assumption}}
+\providecommand*{\assumptionautorefname}{Assumption}
+
+\def\algorithmautorefname{Algorithm}
+\renewcommand*{\figureautorefname}{Figure}%
+\renewcommand*{\tableautorefname}{Table}%
+\renewcommand*{\partautorefname}{Part}%
+\renewcommand*{\chapterautorefname}{Chapter}%
+\renewcommand*{\sectionautorefname}{Section}%
+\renewcommand*{\subsectionautorefname}{Section}%
+\renewcommand*{\subsubsectionautorefname}{Section}% 
+
+
+% My Macros
+\def\indep{\perp\!\!\!\perp}
+\newcommand{\given}{\mbox{ }\vert\mbox{ }}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Expect}[1]{\mathbb{E}\!\left[#1\right]}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\B}{\mathcal{B}}
+\DeclareMathOperator*{\Variance}{Var}
+\newcommand{\Var}[1]{\Variance\!\left[#1\right]}
+\DeclareMathOperator*{\Covariance}{Cov}
+\newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\indicator}{\mathbbm{1}}
+\newcommand{\cdist}{\rightsquigarrow}
+\newcommand{\cprob}{\xrightarrow{P}}
+\newcommand{\clp}{\xrightarrow{L_p}}
+\newcommand{\cas}{\xrightarrow{as}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\hat}{\widehat}
+
+
+% Your new macros
+
+
+
+% To be entered
+\setcounter{lecnum}{24}
+\newcommand{\lecturer}{Prof.\ McDonald}
+\newcommand{\scribe}{Nikolai Karpov}
+\newcommand{\chtitle}{Upper \& Lower bounds}
+\newcommand{\lecdate}{11 Nov 2017}
+
+
+\begin{document}
+\rule{6.5in}{1pt}
+
+\textsc{STAT--S 782
+        \hfill \thelecnum\ --- \chtitle
+        \hfill \lecdate}
+
+\textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
+\rule{6.5in}{1pt}
+
+\section{Finishing upper bounds}
+\begin{example}
+	$K(u)=\left(\frac{9}{8}-\frac{15}{8}u^2\right)I(|u|\leq 1)$ is Kernel of order $3$.
+\end{example}
+$K(u)=\sum\limits_{m=0}^{\ell}\phi_m(0)\phi_m(u)\mu(u)$ is a kernel of order $\ell$ if one satisfies the following conditions:
+\begin{enumerate}
+	\item $\phi_m$ is polynomial of degree $m$.
+	\item $\{\phi_m\}$ is a basis for $L_2\left([-1, 1]\right)$.
+	\item $\forall{u}:\mu(u)\geq 0$ and $\mu(0)=1$.
+	\item $\int{\phi_j(u)\phi_k(u)\mu(u){du}}=I[j=k].$
+\end{enumerate}
+
+In case when integrated risk is equal to $\Expect{\int{(\hat{p}_h(x_0)-p(x_0))^2dx}}$.
+\begin{theorem}
+	Suppose
+	\begin{enumerate}
+		\item $\int{K^2(u)du} < \infty$.
+		\item $K$ is kernel of order $\ell$.
+		\item $\left(\int{(p^{(\ell)}}(x+t)-p^{(\ell)}(x))^2dx\right)^\frac{1}{2} \leq L |t|^{\beta-\ell}.$
+		\item $\int{|u|^{\beta}|K(u)|du}<\infty$.
+	\end{enumerate}
+	Then with $h^*=\alpha n ^{-\frac{1}{2\beta+1}}$
+	$$\sup\limits_{p} \Expect{\int{(\hat{p}_{h^*}(x)-p(x))^2}dx} \leq C{n^{\frac{-2\beta}{2\beta+1}}}.$$
+\end{theorem}
+
+\begin{theorem}
+	Let $y_i=f(x_i)+\epsilon_i$, under lots of assumptions...
+	$\sup\limits_{f \in \mathcal{F}}\Expect{\int{(\hat{f}_h(x)-f(x))^2{dx}}} \leq Cn^{\frac{-2\beta}{2\beta+1}}$ where $\hat{f}_h(x)=\frac{\sum{Y_i{K\left(\frac{x-x_i}{h}\right)}}}{\sum{K\left(\frac{x-x_i}{h}\right)}}\,.$
+\end{theorem}
+
+\section{Lower bounds}
+Ingredients:
+\begin{itemize}
+	\item Class of ``parameters'' $\Theta$.
+	\item A family of $\{P_{\theta} : \theta \in \Theta\}.$
+	\item A semi distance on $\Theta$, $d : \Theta \times \Theta \to [0, \infty)$ (satisfies triangle inequality). 
+\end{itemize} 
+Goal: try to show (rate minimax)
+$$ \liminf\limits_{n \to \infty}\inf\limits_{\hat{\theta}_n}\sup\limits_{\theta \in \Theta}\Expect{w(\psi_n^{-1}d(\theta_n,\theta))} \geq C > 0\,.$$
+
+\begin{theorem}
+	If $Y_i=f(x_i)+\epsilon_i$, $f \in W(\beta,\ell)$ (Sobolev functions)
+	$$ \liminf\limits_{n \to \infty} \inf\limits_{\hat{f}} \sup\limits_{f \in W(\beta, \ell)}\Expect{n^{\frac{\beta}{2\beta+1}}\int{(\hat{f}_n(x)-f(x))^2dx}}\geq C > 0$$
+	
+	We take $w(u)=u^2$ and $\psi_n^{-1}=n^\frac{-beta}{2\beta+1}$.
+\end{theorem}
+
+\textbf{General schemes}: Fano's method.
+\begin{enumerate}
+	\item From expectations to probabilities
+	$$\Expect{w(\psi_n^{-1}d(\hat{\theta},\theta))} \geq w(A)\Pr[\psi_n^{-1}d(\hat{\theta},\theta)\geq A] = w(A)\Pr[d(\hat{\theta},\theta)\geq \psi_n A] $$
+	Thus we need only prove lower bound on $\inf\limits_{\hat{\theta}}\sup_{\theta} \Pr(d(\hat{\theta},\theta)>s)$.
+	\item Reduction to finite set of parameters
+	$ \inf\limits_{\hat{\theta}}\sup\limits_{\theta}\Pr(d(\hat{\theta},\theta)\geq s) = \inf\limits_{\hat{\theta}}\max\limits_{\theta \in \{\theta_1,\dotsc, \theta_n\}}\Pr(d(\hat{\theta},\theta)\geq s)\,.$
+	\item Convert from estimation to testing. Suppose $\forall{k\neq j} :d(\theta_j, \theta_k) \geq 2s$ then for any estimator $\psi$
+	and $j$:
+	$$ \Pr_{\theta_j}(d(\hat{\theta},\theta_j)\geq s) \geq \Pr(\psi^* \neq j)$$
+	\begin{example}
+		$X_1, \dotsc, X_n \sim \mathcal{N}(\theta, 1)$, $\theta \in \Theta = \mathbb{R}$, $P_{\theta}=\{\mathcal{N}(\theta, 1) : \theta \in \Theta\}$, $d(\hat{\theta}, \theta)=|\hat{\theta}-\theta|$, $w(u)=u$, and $P_{\theta_i}=P_i$.
+	\end{example}
+	want to prove $\inf\limits_{\psi}\max\limits_{j=0,1}P_j(\psi^* \neq j) \geq C > 0$, but need $|\theta_0-\theta_1| \geq 2s$.
+	Notice that $P_0(\bar{x})=\prod\limits_{i=1}^n\mathcal{N}(x_i \mid \theta_0, 1)$ and $\Pr(\psi \neq 0)=\Pr(\psi = 1)$.
+	
+	$$ \int I(\psi = 1) d{P_0} = \int{I(\psi=1)\frac{p_0(x)}{p_1(x)}p_1(x)}dx \geq \tau \int{I\left(\psi = 1\land \frac{p_0(x)}{p_1(x)} \geq \tau \right)}p_1(x)dx \geq \tau(\pi - \alpha_1)$$
+	where $\pi=P_1(\psi=1)$ and $\alpha_1=P_1\left(\frac{p_0(\bar{x})}{p_1(\bar{x})} < \tau\right)$.
+	$$ p_{*}=\inf\max{P_j(\psi \neq j)} \geq \min\limits_{0 \leq \pi \leq 1}\max(\tau(\pi - \alpha_1),1-\pi) = \frac{\tau(1-\alpha_1)}{1+\tau}\,.$$
+	It means $p_{*}\geq \sup\limits_{\tau > 0}\frac{\tau}{\tau+1}P_1\left(\frac{p_0(x)}{p_1(x)}\geq \tau\right)$, notice that	$P_1\left(\frac{p_0(\bar{x})}{p_1(\bar{x})} \geq \tau \right) = P_1(\sqrt{n}\bar{x} + \frac{n}{2}(\theta_0^2-\theta_1^2) > \tau)$. If $\theta_0=\frac{1}{\sqrt{n}}, \theta_1=0$ then $P_1(\sqrt{n}\bar{x}+\frac{1}{2} > \tau)=1-\Phi(\tau-\frac{1}{2})$ and 
+	$d(\theta_0, \theta_1)\geq \psi_n = \frac{1}{\sqrt{n}}$.
+	Thus $\liminf\limits_{n \to \infty}\inf\limits_{\theta}\sup_{\theta \in \Theta}\Expect{w(\sqrt{n}|\hat{\theta}-\theta|)}\geq{c}>0$
+\end{enumerate}
+%\bibliographystyle{scribebibsty}
+%\bibliography{s782references}
+
+\end{document}
