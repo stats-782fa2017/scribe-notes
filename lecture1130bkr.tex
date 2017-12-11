@@ -82,6 +82,8 @@
 \DeclareMathOperator*{\Covariance}{Cov}
 \newcommand{\Cov}[1]{\Covariance\!\left[#1\right]}
 \newcommand{\Y}{\mathcal{Y}}
+\newcommand{\normal}{\mathcal{N}}
+
 \newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
 \newcommand{\email}[1]{\href{mailto:#1}{#1}}
 \DeclareMathOperator*{\argmin}{argmin}
@@ -97,6 +99,8 @@
 % Ben's macros:
 \newcommand{\F}{\mathcal{F}}
 \newcommand{\E}[1]{\mathbb{E}\!\left[#1\right]}
+\newcommand{\sobolev}[2]{W^{#1,#2}}
+
 \renewcommand{\P}{\mathbb{P}}
 \newcommand{\R}{\mathbb{R}}
 \renewcommand{\S}{\mathcal{S}}
@@ -112,6 +116,9 @@
 \newcommand{\wrt}{\ensuremath{\;\mathrm{w.}\;\mathrm{r.}\;\mathrm{t.}\;}}
 \newcommand{\then}{\ensuremath{\;\Rightarrow\;}}
 
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 
 % To be entered
 \setcounter{lecnum}{18}
@@ -131,122 +138,164 @@
 \textsc{Lecturer: \lecturer \hfill Scribe: \scribe}
 \rule{6.5in}{1pt}
 
-\section{Finite Class Lemma}
+\section{Introduction}
 Recall from last time,
-f_0=0
-f_1 = Lh_n^\beta K(x-x_0 / h_n), x\in[0,1]
+\begin{align*}
+f_0&=0\\
+f_1 &= Lh_n^\beta K(x-x_0 / h_n),\; x\in[0,1]\\
+h_n &= c_o n^{\frac{1}{2\beta+1}}
+\end{align*}
 
-h_n = c_o n^{\frac{1}{2\beta+1}}
+We needed to choose the parameter that adds enough smoothness but still remains in the function class.
+So we chose 
+\[
+d(f_0,f_1) \geq 2s = cn^{\frac{\beta}{2\beta+1}}\text{with $\phi_n = n^{\frac{\beta}{2\beta+1}}$
+and $K(P_0,P_1)\leq\alpha<\infty$.} 
+\]
 
-will have to choose param that adds enough smoothness but still remains in fn class
+We saw previously that $\alpha=\O(nh_n^{2\beta+1}) \Rightarrow h_n=\O( n^{\frac{1}{2\beta+1}} )$.
 
-wanted d(f_0,f_1) \geq 2s = cn^{\frac{\beta}{2\beta+1}}, with \phi_n = n^{\frac{\beta}{2\beta+1}}
+What if, instead of considering a particular point, we want to use the $L_2$ distance between these functions. 
 
-and K(P_0,P_1)\leq\alpha<\infty
-
-We saw previously that \alpha=\O(nh_n^{2\beta+1}) \Rightarrow h_n=\O( n^{\frac{1}{2\beta+1}} )
-
-What if instead of considering a particular point, we want to use the L_2 dist between these funcs, d(f,g) = 
-Then d(f_0,f_1) = (\int f_1^2(x)dx)^{1/2} \\
-&= Lh_n^\beta(\int K^2(\frac{x-x_0}{h_n}dx)^{1/2}
-&= Lh_n^{\beta+1/2} (\int K^2(u)du)^{1/2}
-&=\O(h_n^{\beta+1/2})=\O(n^{-1/2})
+Then 
+\begin{align*}
+d(f_0,f_1) &= \left(
+		\int f_1^2(x)dx
+	\right)^{1/2} \\
+&= Lh_n^\beta
+	\left(
+		\int K^2(\frac{x-x_0}{h_n}dx
+		\right)^{1/2}\\
+&= Lh_n^{\beta+1/2} 
+	\left(
+		\int K^2(u)du
+	\right)^{1/2}\\
+&=\O(h_n^{\beta+1/2})=\O(n^{-1/2})\\
 &\Rightarrow \phi_n = n^{-1/2}
-goes to zero more quickly than upper bound.  No known estr that achieves this l.b., so either there's some better est'r out there or this technique is not tight enough, and we need a more dificult problem.  
-In particular, it is not suff to use 2 hyps \max{f_0,f_1} as proxy for \sup\Theta.
+\end{align*}
 
-\section{Main result}[KL version]
-If m\geq 2, \theta_0,...,\theta_m\in\Theta
+goes to zero more quickly than the upper bound.  No known estimator achieves this l.b., so either a better estimator exists, or this technique is not tight enough.
+  
+In particular, it is not sufficient to use 2 hypotheses $\max\{f_0,f_1\}$ as a proxy for $\sup\Theta.$
+This motivates the following technique.
+
+\section{Main result (KL version)}
+If $m\geq 2, \theta_0,...,\theta_m\in\Theta$, then
 \begin{enumerate}
-\item d(\theta_i,\theta_k)\geq2s>0\forall j,k
-\item P_j<<P_0 (always true if, e.g., every msr has a density wrt Lebesgue measure)
-\frac{1}{m}\sum_{j=1}^mK(P_j,P_0)\leq \alpha\log m
-and 
-o<\alpha<1/8
+\item $d(\theta_i,\theta_k)\geq2s>0\forall j,k$
+\item $P_j<<P_0$ (always true if, e.g., every msr has a density wrt Lebesgue measure)
+\item $\frac{1}{m}\sum_{j=1}^mK(P_j,P_0)\leq \alpha\log m$ and 
+\item $0<\alpha<1/8$,
 \end{enumerate}
-Using parameter 0 as the base case.  
-
-Then \inf_{\hat{theta}}\sup_{\theta\in\Theta} P_\theta(d(\hat{\theta},\theta)\geq s) \geq C_1(m)C_2(\alpha)>0 \forall m
-
-\section{Result}[McDonald]
-Minimax nonparametric KDE, but allow the dimension to increase.
-Let X_1,...,X_n ~iid f
+using parameter 0 as the base case.  Then \[\inf_{\hat{\theta}}\sup_{\theta\in\Theta} P_\theta(d(\hat{\theta},\theta)\geq s) \geq C_1(m)C_2(\alpha)>0 \;\forall m\]
+\begin{theorem}[McDonald]
+Minimax nonparametric KDE, but allowing the dimension to increase.
+Let $X_1,...,X_n \sim iid f$ and define
 \begin{enumerate}
-\item f:\R^d\to\R^+
-\item f\in\N_p(\beta,c), the Nikolsky class: 
+\item $f:\R^d\to\R^+$
+\item $f\in\N_p(\beta,c)$, the Nikolsky class: 
 \begin{enumerate}
-\item D^s f exists if |s|\leq \floor{\beta}
-\item \int(D^sf(x+t)-D^sf(x))^pdx \leq C^p||t||_1^{p(\beta-|s|}
-\item \int f = 1
+\item $D^s f$ exists if $|s|\leq \floor{\beta}$
+\item $\int(D^sf(x+t)-D^sf(x))^pdx \leq C^p||t||_1^{p(\beta-|s|}$
+\item $\int f = 1$
 \end{enumerate}
 \end{enumerate}
-Result: \inf_{\hat{f}}\sup_{f\in\N} \E\left[\left(\frac{n^\beta}{d^d}\right)^{\frac{1}{2\beta+d}}||f-\hat{f}||_p\right]\geq c
-(Unlike other results, n,d\to\infty)
+Then 
+\[
+\inf_{ \hat{f} } \sup_{f\in\N} 
+	\E{ 
+			\left( 
+				\frac{n^\beta}{d^d}
+			 \right) 
+				^ { \frac{1}{2\beta+d}}  
+			||f-\hat{f}||_p 
+		}
+		 \geq c
+\]
+\end{theorem}
 
-Ingredients
+Unlike the previous result, this holds when both $n,d\to\infty$.
+
+\textbf{Ingredients}
 \begin{enumerate}
-\item need m+1 densities in \N_p(\beta,c)
-\item show ||f_i-f_j||_p\geq 2c \phi_{nd} \forall i,j
-\phi_{nd} = (\frac{d^d}{n^\beta})^{\frac{1}{2\beta+d}}
-\item show \frac{1}{m}\sum_{j=1}^mK(P_j,P_0)\leq \alpha\log m
+\item Need to find $m+1$ densities in $\N_p(\beta,c)$
+\item Then show $||f_i-f_j||_p\geq 2c \phi_{nd} \forall i,j$
+\item $\phi_{nd} = (\frac{d^d}{n^\beta})^{\frac{1}{2\beta+d}}$
+\item show $\frac{1}{m}\sum_{j=1}^mK(P_j,P_0)\leq \alpha\log m$
 \end{enumerate}
-\textbf{Sketch}
 
-What are these densities?  Have to be a bit more careful than previous case (f_1=slight perturbation of null dist) to ensure perturbed fn is still a density AND smooth enough to be in the Nikolsky class.
+\textbf{Proof Sketch}
 
-\Gamma_0\in\sobolev(\beta,1/2)\cap C^\infty(\R)
+What are these densities?  Have to be a bit more careful than previous case (in which $f_1$ was just a slight perturbation of the null distribution) to ensure the perturbed functions are still densities AND smooth enough to be in the Nikolsky class.
+\[\Gamma_0\in\sobolev{\beta}{1/2} \cap C^\infty(\R)\]
 
-This part is the difference
-\Gamma(u) = dC\prod_{i=1}^d\Gamma_0(u_i)  (need this d factor to get the right rate!)
+This is the key difference:
+\[\Gamma(u) = dC\prod_{i=1}^d\Gamma_0(u_i) \]
+We need this $d$ factor to get the right rate!
+And for any integer $m\geq2, \gamma_{m,j}(x)=m^{-\beta}\Gamma(mx-j),$ a d-dim vector $j\in J=\{1,...,m\}^d$.
 
-And forall integer m\geq2, \gamma_{m,j}(x)=m^{-\beta}\Gamma(mx-j), d-dim vector j\in J=\{1,...,m\}^d
+The distributions are:
+\begin{align*}
+f_0 &= \normal_d(0,\sigma I)\\
+f_\omega(x) &= 
+	f_0(x) 
+	+ \sum_{j\in J} \omega(j) \gamma_{m,j}(x),\\
+\end{align*}
 
-dists:
-f_0 = \normal_d(0,\sigma I)
-f_\omega(x) = f_0(x) + \sum_{j\in J}\omega(j)\gamma_{m,j}(x)
-
-\omega is binary vec of size m^d, \omega(j)\in\{0,1\}
+where $\omega$ is a binary vector of size $m^d, \omega(j)\in\{0,1\}$
 
 For details, see \cite{mcdonald}
 \begin{example}
-m=4,d=2,J=\{(1,1),(1,2),(2,1),...,(4,4)\}
-4^2 = 16
-f_\omega has 0 to 16 ~ \Rightarrow 2^16 densities
+$m=4,d=2,J=\{(1,1),(1,2),(2,1),...,(4,4)\}$.
+
+$\Rightarrow f_\omega$ has 0 to 16 $\Rightarrow 2^16$ densities
 
 \end{example}
 
 
 \textbf{Note}
-In general, for $m$ hyps will always choose elements acc to vertices of binary hypercube, then apply Lemma \ref{vg}.
+In general, for $m$ hypotheses we will always choose elements according to the vertices of binary hypercube, then apply Lemma \ref{vg}.
 
 \begin{enumerate}
-\item Can show f_\omega is smooth enough if m>\left[dC(C)^d\right]^{1/\beta}
-(if m too small, edges of hypercube too small to get useful perturbations)
-\item to show appropriate separation, need to look at ||f_\omega-f_{\omega'}||_p=||\sum_{j\in J}(\omega(j) - \omega'(j))\gamma_{m,j}||_p
-&= m^{-\beta-d/p}H^{1/2}(\omega,\omega')||\Gamma||_p, where H is the Hamming dist.
-Hamming dist separation is generic part of all $m$ hyp proofs
+\item Can show $f_\omega$ is smooth enough if $m>\left[dC(C)^d\right]^{1/\beta}$
+(if m too small, the edges of the hypercube are too small to get useful perturbations)
+\item to show appropriate separation, need to look at 
+\begin{align*}
+f_\omega-f_{\omega'}||_p &= ||\sum_{j\in J}(\omega(j) - \omega'(j))\gamma_{m,j}||_p\\
+&= m^{-\beta-d/p}H^{1/2}(\omega,\omega')||\Gamma||_p
+\end{align*}, 
+where H is the Hamming dist.
+(Hamming dist separation is a generic part of all $m$-hypothesis proofs.)
 
 \begin{lemma}[Varshamov-Gilbert]
 \label{vg}
-Let m\geq 8.  Then \exists D\subseteq \{\omega\} \st \forall \omega,\omega'\in D,
-H(\omega,\omega')\geq \frac{m^d}{8} and
-|D|\geq\exp(m^d/8)
+Let $m\geq 8$.  Then $\exists D\subseteq \{\omega\} \st \forall \omega,\omega'\in D,
+H(\omega,\omega')\geq \frac{m^d}{8}$ and
+$|D|\geq\exp(m^d/8)$
 \end{lemma}
 
 [Q: is \ref{vg} related to isoperimetric ineqs?
 
 We will shrink class to D, throwing away alternatives that are ``too close''.
-Then m^{-\beta-d/p}H^{1/2}(\omega,\omega')||\Gamma||_p 
+Then 
+\begin{align*}
+m^{-\beta-d/p}H^{1/2}(\omega,\omega')||\Gamma||_p 
 	\geq m^{-\beta-d/p} (\frac{m^d}{8})^{1/p} dC||\Gamma_0||_p^d
 	= 8^{-1/p}dm^{-\beta}C||\Gamma_0||_p^d
+\end{align*}
 
-\item K(P_\omega,P_0)\leq\cdots\leqC^dnd^2m^{-2\beta}.  Need to choose m to annihilate n if we want \alpha\log m bound (and satisfy many other conds):
-Choose m \st nC^dd^2m^{-2\beta}\leq \alpha\log |D|
-\Rightarrow m\leq \left[C_1d^2nC_2^d\right]^{\frac{1}{2\beta+d}}
+\item $K(P_\omega,P_0)\leq\cdots\leq C^dnd^2m^{-2\beta}$.  
+Need to choose $m$ to annihilate $n$ if we want the $\alpha\log m$ bound (and satisfy the many other conds):
+Choose $m \st$
+\[ nC^dd^2m^{-2\beta}\leq \alpha\log |D|
+\Rightarrow m\leq \left[C_1d^2nC_2^d\right]^{\frac{1}{2\beta+d}}\]
 
-\textbf{Combine}: set m=||\Gamma_0||_p^{\frac{d+1}{\beta}}\kappa(d^2n)^{\frac{1}{2\beta+d}}
-
-Plug in m to get \geq 2C\phi_{nd}, \phi_{nd}=(d^dn^{-\beta})^{\frac{1}{2\beta+d}}.
+\textbf{Combine}: set 
+\begin{align*}
+m&=||\Gamma_0||_p^{\frac{d+1}{\beta}}\kappa(d^2n)^{\frac{1}{2\beta+d}}.\\
+&\text{Plug in $m$ to get}\\
+& \geq 2C\phi_{nd}, \phi_{nd}=(d^dn^{-\beta})^{\frac{1}{2\beta+d}}.
+\end{align*}
 
 
 \end{enumerate}
