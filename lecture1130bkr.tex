@@ -121,7 +121,7 @@
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 
 % To be entered
-\setcounter{lecnum}{18}
+\setcounter{lecnum}{26}
 \newcommand{\lecturer}{Prof.\ McDonald}
 \newcommand{\scribe}{Ben Rosenzweig}
 \newcommand{\chtitle}{Minimax Bounds with Many Hypotheses}
@@ -146,7 +146,7 @@ f_1 &= Lh_n^\beta K(x-x_0 / h_n),\; x\in[0,1]\\
 h_n &= c_o n^{\frac{1}{2\beta+1}}
 \end{align*}
 
-We needed to choose the parameter that adds enough smoothness but still remains in the function class.
+We needed to find a parameter that adds enough smoothness but still remains in the function class.
 So we chose 
 \[
 d(f_0,f_1) \geq 2s = cn^{\frac{\beta}{2\beta+1}}\text{with $\phi_n = n^{\frac{\beta}{2\beta+1}}$
@@ -155,7 +155,7 @@ and $K(P_0,P_1)\leq\alpha<\infty$.}
 
 We saw previously that $\alpha=\O(nh_n^{2\beta+1}) \Rightarrow h_n=\O( n^{\frac{1}{2\beta+1}} )$.
 
-What if, instead of considering a particular point, we want to use the $L_2$ distance between these functions. 
+What if, instead of considering a particular point, we want to use the $L_2$ distance between these functions?
 
 Then 
 \begin{align*}
@@ -174,9 +174,9 @@ d(f_0,f_1) &= \left(
 &\Rightarrow \phi_n = n^{-1/2}
 \end{align*}
 
-goes to zero more quickly than the upper bound.  No known estimator achieves this l.b., so either a better estimator exists, or this technique is not tight enough.
+goes to zero more quickly than the upper bound.  No known estimator achieves this lower bound, so either a better estimator exists, or this technique is not tight enough.
   
-In particular, it is not sufficient to use 2 hypotheses $\max\{f_0,f_1\}$ as a proxy for $\sup\Theta.$
+In particular, it is not sufficient to use 2 hypotheses $f_0,f_1$ and $\max\{f_0,f_1\}$ as a proxy for $\sup\Theta.$
 This motivates the following technique.
 
 \section{Main result (KL version)}
@@ -188,15 +188,17 @@ If $m\geq 2, \theta_0,...,\theta_m\in\Theta$, then
 \item $0<\alpha<1/8$,
 \end{enumerate}
 using parameter 0 as the base case.  Then \[\inf_{\hat{\theta}}\sup_{\theta\in\Theta} P_\theta(d(\hat{\theta},\theta)\geq s) \geq C_1(m)C_2(\alpha)>0 \;\forall m\]
+
+The following theorem concerns minimax nonparametric KDE, but allows the dimension to increase.
+
 \begin{theorem}[McDonald]
-Minimax nonparametric KDE, but allowing the dimension to increase.
-Let $X_1,...,X_n \sim iid f$ and define
+Let $X_1,...,X_n \sim iid\; f$ and define
 \begin{enumerate}
 \item $f:\R^d\to\R^+$
 \item $f\in\N_p(\beta,c)$, the Nikolsky class: 
 \begin{enumerate}
 \item $D^s f$ exists if $|s|\leq \floor{\beta}$
-\item $\int(D^sf(x+t)-D^sf(x))^pdx \leq C^p||t||_1^{p(\beta-|s|}$
+\item $\int(D^sf(x+t)-D^sf(x))^pdx \leq C^p||t||_1^{p(\beta-|s|)}$
 \item $\int f = 1$
 \end{enumerate}
 \end{enumerate}
@@ -219,20 +221,21 @@ Unlike the previous result, this holds when both $n,d\to\infty$.
 \textbf{Ingredients}
 \begin{enumerate}
 \item Need to find $m+1$ densities in $\N_p(\beta,c)$
-\item Then show $||f_i-f_j||_p\geq 2c \phi_{nd} \forall i,j$
+\item Then show $||f_i-f_j||_p\geq 2c \phi_{nd} \;\forall i,j$
 \item $\phi_{nd} = (\frac{d^d}{n^\beta})^{\frac{1}{2\beta+d}}$
 \item show $\frac{1}{m}\sum_{j=1}^mK(P_j,P_0)\leq \alpha\log m$
 \end{enumerate}
 
 \textbf{Proof Sketch}
 
-What are these densities?  Have to be a bit more careful than previous case (in which $f_1$ was just a slight perturbation of the null distribution) to ensure the perturbed functions are still densities AND smooth enough to be in the Nikolsky class.
+What are these densities?  Have to be a bit more careful than previous case (in which $f_1$ was just a slight perturbation of the null distribution) to ensure the perturbed functions are still densities \textit{and} smooth enough to be in the Nikolsky class.
 \[\Gamma_0\in\sobolev{\beta}{1/2} \cap C^\infty(\R)\]
 
 This is the key difference:
 \[\Gamma(u) = dC\prod_{i=1}^d\Gamma_0(u_i) \]
-We need this $d$ factor to get the right rate!
-And for any integer $m\geq2, \gamma_{m,j}(x)=m^{-\beta}\Gamma(mx-j),$ a d-dim vector $j\in J=\{1,...,m\}^d$.
+We need this $d$ factor to get the right rate.
+
+For any integer $m\geq2$, let $\gamma_{m,j}(x)=m^{-\beta}\Gamma(mx-j),$ a d-dim vector $j\in J=\{1,...,m\}^d$.
 
 The distributions are:
 \begin{align*}
@@ -244,29 +247,17 @@ f_\omega(x) &=
 
 where $\omega$ is a binary vector of size $m^d, \omega(j)\in\{0,1\}$
 
-For details, see \cite{mcdonald}
+For details, see \cite{McDonald2017}.
 \begin{example}
 $m=4,d=2,J=\{(1,1),(1,2),(2,1),...,(4,4)\}$.
 
-$\Rightarrow f_\omega$ has 0 to 16 $\Rightarrow 2^16$ densities
+$\Rightarrow f_\omega$ has 0 to 16 $\Rightarrow 2^{16}$ densities
 
 \end{example}
 
 
 \textbf{Note}
-In general, for $m$ hypotheses we will always choose elements according to the vertices of binary hypercube, then apply Lemma \ref{vg}.
-
-\begin{enumerate}
-\item Can show $f_\omega$ is smooth enough if $m>\left[dC(C)^d\right]^{1/\beta}$
-(if m too small, the edges of the hypercube are too small to get useful perturbations)
-\item to show appropriate separation, need to look at 
-\begin{align*}
-f_\omega-f_{\omega'}||_p &= ||\sum_{j\in J}(\omega(j) - \omega'(j))\gamma_{m,j}||_p\\
-&= m^{-\beta-d/p}H^{1/2}(\omega,\omega')||\Gamma||_p
-\end{align*}, 
-where H is the Hamming dist.
-(Hamming dist separation is a generic part of all $m$-hypothesis proofs.)
-
+In general, for $m$ hypotheses we will always choose elements according to the vertices of binary hypercube, then apply Lemma \ref{vg}:
 \begin{lemma}[Varshamov-Gilbert]
 \label{vg}
 Let $m\geq 8$.  Then $\exists D\subseteq \{\omega\} \st \forall \omega,\omega'\in D,
@@ -274,9 +265,20 @@ H(\omega,\omega')\geq \frac{m^d}{8}$ and
 $|D|\geq\exp(m^d/8)$
 \end{lemma}
 
-[Q: is \ref{vg} related to isoperimetric ineqs?
+\begin{enumerate}
+\item Can show $f_\omega$ is smooth enough if $m>\left[dC(C)^d\right]^{1/\beta}$
+(if m too small, the edges of the hypercube are too small to get useful perturbations)
+\item to show appropriate separation, need to look at 
+\begin{align*}
+f_\omega-f_{\omega'}||_p &= ||\sum_{j\in J}(\omega(j) - \omega'(j))\gamma_{m,j}||_p\\
+&= m^{-\beta-d/p}H^{1/2}(\omega,\omega')||\Gamma||_p,
+\end{align*}
+where H is the Hamming dist.
+(Hamming dist separation is a generic part of all $m$-hypothesis proofs.)
+%Q: is \ref{vg} related to isoperimetric ineqs?
 
 We will shrink class to D, throwing away alternatives that are ``too close''.
+
 Then 
 \begin{align*}
 m^{-\beta-d/p}H^{1/2}(\omega,\omega')||\Gamma||_p 
@@ -285,20 +287,25 @@ m^{-\beta-d/p}H^{1/2}(\omega,\omega')||\Gamma||_p
 \end{align*}
 
 \item $K(P_\omega,P_0)\leq\cdots\leq C^dnd^2m^{-2\beta}$.  
-Need to choose $m$ to annihilate $n$ if we want the $\alpha\log m$ bound (and satisfy the many other conds):
-Choose $m \st$
+Need to choose $m$ to annihilate $n$ if we want the $\alpha\log m$ bound (and satisfy the many other conditions):
+
+So we choose $m \st$
 \[ nC^dd^2m^{-2\beta}\leq \alpha\log |D|
 \Rightarrow m\leq \left[C_1d^2nC_2^d\right]^{\frac{1}{2\beta+d}}\]
 
-\textbf{Combine}: set 
+\item Finally, combine these terms: 
+
+set 
 \begin{align*}
 m&=||\Gamma_0||_p^{\frac{d+1}{\beta}}\kappa(d^2n)^{\frac{1}{2\beta+d}}.\\
-&\text{Plug in $m$ to get}\\
+\text{Plug in $m$ to get}\\
 & \geq 2C\phi_{nd}, \phi_{nd}=(d^dn^{-\beta})^{\frac{1}{2\beta+d}}.
 \end{align*}
 
 
 \end{enumerate}
 	
+\bibliographystyle{scribebibsty}
+\bibliography{s782references}
 
 \end{document}
